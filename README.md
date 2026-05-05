@@ -1,6 +1,6 @@
 # 🛒 Freak-E-Shop
 
-> Proyecto final — Java POO · [Curso] · [2026]
+> Proyecto final — Java POO · [1604] · [2026]
 
 ## 👥 Integrantes
 
@@ -9,14 +9,14 @@
 | Miguel Angel Benítez Moncaleano | [@MiguelAnBM](https://github.com/MiguelAnBM) |
 | Delany Yulieth Mendoza Castillo | [@DelaMendoza](https://github.com/DelaMendoza) |
 | Jady Luz Ramírez Benítez | [@jadyramirez04](https://github.com/jadyramirez04b-ops) |
-  Carlos Arturo Sánchez Villarreal | [@CarloSanchez77](https://github.com/CarloSanchez77) |
+  Carlos Arturo Sánchez Villarreal | [@CarloSanchez66](https://github.com/CarloSanchez66) |
 ---
 
 ## 📋 Descripción
 
 ### 🛍️ Freak-E-Shop — Tu universo geek en un solo lugar
 
-¿Eres fan del anime, las películas y las series? Entonces **Freak-E-Shop** no es solo una tienda… es tu próxima obsesión. Esta plataforma e-commerce está diseñada para ofrecer una experiencia de compra rápida y segura, donde cada producto conecta con la cultura geek que amas.
+¿Eres fan del anime, las películas y las series? Entonces **Freak-E-Shop** no es sólo una tienda… es tu próxima obsesión. Esta plataforma e-commerce está diseñada para ofrecer una experiencia de compra rápida y segura, donde cada producto conecta con la cultura geek que amas.
 
 Desde ropa temática hasta figuras coleccionables, pasando por mochilas, peluches y accesorios únicos, aquí encontrarás todo lo que necesitas para expresar tu estilo y pasión.
 
