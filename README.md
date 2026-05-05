@@ -78,7 +78,14 @@ Desarrollada con **Spring Boot** y **Thymeleaf**, la plataforma garantiza:
 # 1. Clonar
 git clone (https://github.com/Antomaker/competencia.git)
 
-# 2. <!-- instrucciones específicas de su proyecto -->
+# 2. Abrir la carpeta app en Apache Netbeans (25+)
+File -> Open Project -> freak_e_shop
+
+# 3. Ejecutar la clase principal (FreakEShopApplication)
+F6 dentro de la clase FreakEShopApplication ubicada en el paquete com.freakeshop.freak_e_shop
+
+# 4. Abrir el navegador y escribir lo siguiente en la URL
+http://localhost:8080
 ```
 
 ---
