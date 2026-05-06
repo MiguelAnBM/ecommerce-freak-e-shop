@@ -4,7 +4,7 @@
  */
 package com.freakeshop.freak_e_shop.model;
 
-package com.freakeshop.freak_e_shop.model;
+
 
 public abstract class Producto {
 
