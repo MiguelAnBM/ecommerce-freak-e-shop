@@ -62,6 +62,10 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+                <!-- Forzar la clase principal si hay varias -->
+                <mainClass>com.freakeshop.freak_e_shop.FreakEShopApplication</mainClass>
+            </configuration>
 			</plugin>
 		</plugins>
 	</build>
