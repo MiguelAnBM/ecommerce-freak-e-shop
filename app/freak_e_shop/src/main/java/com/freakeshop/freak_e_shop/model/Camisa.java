@@ -5,6 +5,7 @@
 package com.freakeshop.freak_e_shop.model;
 
 
+package com.freakeshop.freak_e_shop.model;
 
 public class Camisa extends Producto {
 
@@ -14,29 +15,20 @@ public class Camisa extends Producto {
     public Camisa(String id, String nombre, String descripcion, double precio, String imagen,
                   String talla, String material) {
         super(id, nombre, descripcion, precio, imagen);
-        setTalla(talla);
-        setMaterial(material);
+        this.talla = talla;
+        this.material = material;
+    }
+
+    @Override
+    public double calcularPrecio() {
+        return getPrecio(); // 👈 importante
     }
 
     public String getTalla() {
         return talla;
     }
 
-    public void setTalla(String talla) {
-        if (talla == null || talla.isEmpty()) {
-            throw new IllegalArgumentException("La talla no puede estar vacía");
-        }
-        this.talla = talla;
-    }
-
     public String getMaterial() {
         return material;
-    }
-
-    public void setMaterial(String material) {
-        if (material == null || material.isEmpty()) {
-            throw new IllegalArgumentException("El material no puede estar vacío");
-        }
-        this.material = material;
     }
 }
