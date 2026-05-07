@@ -43,7 +43,7 @@
                 <!-- Cart Actions -->
                 <div class="cart-actions">
                     <a th:href="@{/}" href="index.html" class="continue-link">
-                        <i class="bi bi-arrow-left"></i> Continue Shopping
+                        <i class="bi bi-arrow-left"></i> Continuar comprando
                     </a>
                     <button class="clear-cart-btn" onclick="clearCart()">Clear Cart</button>
                 </div>
@@ -52,12 +52,12 @@
             <!-- RIGHT: Order Summary -->
             <div class="col-lg-4">
                 <div class="order-summary">
-                    <h3 class="order-summary-title">Order Summary</h3>
+                    <h3 class="order-summary-title">Resumen del pedido</h3>
 
                     <!-- Promo Code -->
                     <p class="promo-label">Código de promoción</p>
                     <div class="promo-input-group">
-                        <input type="text" class="promo-input" placeholder="Enter code" id="promoInput"/>
+                        <input type="text" class="promo-input" placeholder="Ingrese el código" id="promoInput"/>
                         <button class="promo-btn" onclick="applyPromo()">Aplicar</button>
                     </div>
                     <p class="promo-hint">Try: STRIDE20 for 20% off</p>
@@ -71,10 +71,10 @@
                     </div>  
                     <div class="summary-row">
                         <span class="label">Envio</span>
-                        <span class="value free" id="summaryShipping">FREE</span>
+                        <span class="value free" id="summaryShipping">GRATIS</span>
                     </div>
                     <p class="free-shipping-msg" id="freeShippingMsg">
-                        <i class="bi bi-check-circle-fill"></i> You qualify for free shipping!
+                        <i class="bi bi-check-circle-fill"></i> Usted califica para el envío gratis!
                     </p>
                     <div class="summary-row">
                         <span class="label">Impuesto Estimado</span>

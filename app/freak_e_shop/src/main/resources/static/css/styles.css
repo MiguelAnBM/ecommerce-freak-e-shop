@@ -2452,13 +2452,6 @@ body *:not(img):not(video):not(svg):not(i) {
     border-radius: 50%;
 }
 
-.size-guide-link {
-    color: var(--stride-accent);
-    font-size: 0.85rem;
-    font-weight: 600;
-    text-decoration: underline;
-}
-
 .size-options-grid {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
