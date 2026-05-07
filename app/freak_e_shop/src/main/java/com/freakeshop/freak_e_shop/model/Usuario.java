@@ -18,8 +18,6 @@ public abstract class Usuario {
         this.contrasena = contrasena;
     }
 
-    // Método abstracto
-    public abstract String mostrarRol();
 
     // GETTERS
     public String getId() {
