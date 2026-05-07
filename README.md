@@ -14,7 +14,7 @@
 
 ## 📋 Descripción
 
-### 🛍️ Freak-E-Shop — Tu universo geek en un solo lugar
+### 🛍️ Freak-E-Shop — Tu mundo geek en un solo lugar
 
 ¿Eres fan del anime, las películas y las series? Entonces **Freak-E-Shop** no es sólo una tienda… es tu próxima obsesión. Esta plataforma e-commerce está diseñada para ofrecer una experiencia de compra rápida y segura, donde cada producto conecta con la cultura geek que amas.
 
@@ -40,17 +40,17 @@ Desarrollada con **Spring Boot** y **Thymeleaf**, la plataforma garantiza:
 #### 🔐 Seguridad que inspira confianza
 - Protección contra vulnerabilidades comunes  
 - Manejo seguro de sesiones y datos del usuario  
-- Base preparada para autenticación y control de acceso  
+- Patrón de arquitectura MVC seguro contra ataques
 
 #### 💾 Persistencia de datos sólida
-- Integración con bases de datos para una gestión confiable  
+- Guardado de facturas de compra íntegro 
 - Carrito de compras funcional y almacenamiento eficiente  
 - Estructura preparada para crecimiento y alto volumen  
 
 #### 🧩 Experiencia fluida y amigable
 - Interfaz clara, intuitiva y atractiva  
 - Flujo de compra sencillo (explora, añade, compra)  
-- Diseño pensado para usuarios reales, no solo desarrolladores  
+- Diseño pensado para usuarios reales, no sólo desarrolladores  
 
 #### 🚀 Fácil de desplegar y extender
 - Configuración simplificada gracias a Spring Boot  
@@ -71,18 +71,19 @@ Desarrollada con **Spring Boot** y **Thymeleaf**, la plataforma garantiza:
 
 ### Requisitos
 - Java JDK 17+
-- Apache NetBeans
+- Apache NetBeans 22+
 
 ### Pasos
 ```bash
 # 1. Clonar
-git clone (https://github.com/Antomaker/competencia.git)
+git clone (https://github.com/MiguelAnBM/ecommerce-freak-e-shop.git)
 
 # 2. Abrir la carpeta app en Apache Netbeans (25+)
 File -> Open Project -> freak_e_shop
 
 # 3. Ejecutar la clase principal (FreakEShopApplication)
-F6 dentro de la clase FreakEShopApplication ubicada en el paquete com.freakeshop.freak_e_shop
+Ruta: Source Packages -> com.freakeshop.freak_e_shop
+F6 dentro de la clase FreakEShopApplication
 
 # 4. Abrir el navegador y escribir lo siguiente en la URL
 http://localhost:8080
@@ -96,7 +97,7 @@ http://localhost:8080
 |-----------|-------------------|
 | Lenguaje | Java |
 | UI / Framework | Spring Boot + Thymeleaf |
-| Persistencia | <!-- Archivos / SQLite / MySQL / H2 / otro --> |
+| Persistencia | Archivos .txt |
 | IDE | Apache NetBeans |
 
 ---
@@ -120,10 +121,10 @@ http://localhost:8080
 - [ ] Carrito de compras
 - [ ] Flujo de pedido y pago
 - [ ] Historial de pedidos
-- [ ] Interfaz gráfica o web funcional
+- [ ] Web funcional
 - [ ] Persistencia de datos
-- [ ] <!-- opcional: búsqueda, reportes, descuentos... -->
-
+- [ ] Barra de búsqueda funcional
+- [ ] Cambio de tema oscuro/claro
 ---
 
 ## 📐 Conceptos POO aplicados
