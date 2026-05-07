@@ -2,18 +2,14 @@ package com.freakeshop.freak_e_shop.model;
 
 public class Cliente extends Usuario {
 
-    // --- 1. Atributos específicos del Cliente ---
     private String direccionEnvio;
     private String telefono;
 
-    // --- 2. Constructor ---
-    // Solo pide los datos básicos requeridos por la clase padre (Usuario)
+    // 2. Constructor 
     public Cliente(String id, String nombre, String correo, String contrasena) {
         
         super(id, nombre, correo, contrasena);
         
-        // Inicializamos estos valores vacíos. 
-        // Se llenarán usando los setters cuando el cliente vaya a pagar en el carrito.
         this.direccionEnvio = "";
         this.telefono = "";
     }
