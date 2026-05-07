@@ -2,32 +2,24 @@ package com.freakeshop.freak_e_shop.model;
 
 public class Cliente extends Usuario {
 
+    // --- 1. Atributos específicos del Cliente ---
     private String direccionEnvio;
     private String telefono;
-    private int puntosFidelidad; 
 
-    // Constructor
-    public Cliente(String id, String nombre, String correo, String contrasena, String direccionEnvio, String telefono) {
+    // --- 2. Constructor ---
+    // Solo pide los datos básicos requeridos por la clase padre (Usuario)
+    public Cliente(String id, String nombre, String correo, String contrasena) {
         
         super(id, nombre, correo, contrasena);
         
-        this.direccionEnvio = direccionEnvio;
-        this.telefono = telefono;
-        this.puntosFidelidad = 0;
+        // Inicializamos estos valores vacíos. 
+        // Se llenarán usando los setters cuando el cliente vaya a pagar en el carrito.
+        this.direccionEnvio = "";
+        this.telefono = "";
     }
 
-    @Override
-    public String mostrarRol() {
-        return "Rol: Cliente Registrado";
-    }
+    // --- 3. Getters y Setters ---
 
-    public void sumarPuntos(int puntos) {
-        if (puntos > 0) {
-            this.puntosFidelidad += puntos;
-        }
-    }
-
-    // Getters y Setters
     public String getDireccionEnvio() {
         return direccionEnvio;
     }
@@ -42,13 +34,5 @@ public class Cliente extends Usuario {
 
     public void setTelefono(String telefono) {
         this.telefono = telefono;
-    }
-
-    public int getPuntosFidelidad() {
-        return puntosFidelidad;
-    }
-
-    public void setPuntosFidelidad(int puntosFidelidad) {
-        this.puntosFidelidad = puntosFidelidad;
     }
 }
