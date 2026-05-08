@@ -8,6 +8,7 @@ public abstract class Producto {
     private String descripcion;
     private double precio;
     private String imagen;
+    private int stock;
     private boolean destacado;
 
     // Constructor
@@ -72,6 +73,14 @@ public abstract class Producto {
 
     public void setImagen(String imagen) {
         this.imagen = imagen;
+    }
+
+    public int getStock() {
+        return stock;
+    }
+
+    public void setStock(int stock) {
+        this.stock = stock;
     }
 
     public boolean isDestacado() {

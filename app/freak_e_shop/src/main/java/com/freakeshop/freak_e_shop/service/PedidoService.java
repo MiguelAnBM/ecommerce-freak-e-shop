@@ -1,6 +1,7 @@
 package com.freakeshop.freak_e_shop.service;
 
 import com.freakeshop.freak_e_shop.dto.PedidoRequestDTO;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
@@ -15,9 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 // Servicio para confirmar pedidos.
-// El stock ya fue descontado al momento de añadir productos al carrito,
-// por lo tanto aquí solo se vacía el carrito sin devolver stock.
-// Y guarda el pedido en el repositorio.
+// El stock ya fue descontado incrementalmente durante la gestión del carrito,
+// por lo tanto aquí solo se vacía el carrito y se persiste el pedido.
 @Service
 public class PedidoService {
 
@@ -26,17 +26,24 @@ public class PedidoService {
     private final ProductoService productoService;
 
     public PedidoService(CarritoService carritoService, PedidoRepository pedidoRepository,
-            ProductoService productoService) {
+            ProductoService productoService, StockService stockService) {
         this.carritoService = carritoService;
         this.pedidoRepository = pedidoRepository;
         this.productoService = productoService;
     }
 
-    // Confirma un pedido: vacía el carrito de la sesión actual (sin devolver
-    // stock).
+    // Confirma un pedido: verifica sesión, vacía el carrito y persiste el pedido.
     // Retorna un mapa con el estado de la operación.
-    public Map<String, String> confirmarPedido(PedidoRequestDTO pedidoDTO) {
-        // Vaciar el carrito sin devolver stock (ya fue reservado al añadir)
+    public Map<String, Object> confirmarPedido(PedidoRequestDTO pedidoDTO, HttpSession session) {
+        // Verificar sesión (segunda barrera)
+        if (session.getAttribute("adminLogueado") == null && session.getAttribute("usuarioLogueado") == null) {
+            Map<String, Object> error = new LinkedHashMap<>();
+            error.put("estado", "ERROR");
+            error.put("error", "no_autenticado");
+            return error;
+        }
+
+        // Vaciar el carrito (el stock ya fue descontado al añadir/modificar items)
         carritoService.vaciarSinDevolverStock();
 
         // Persistir el pedido
@@ -47,6 +54,8 @@ public class PedidoService {
         pedido.setTelefono(pedidoDTO.getTelefono());
         pedido.setMetodoPago(pedidoDTO.getMetodoPago());
         pedido.setTotal(pedidoDTO.getTotal());
+        pedido.setImpuesto(pedidoDTO.getImpuesto());
+        pedido.setEnvio(pedidoDTO.getEnvio());
 
         List<ItemPedido> items = new ArrayList<>();
         if (pedidoDTO.getItems() != null) {
@@ -68,7 +77,7 @@ public class PedidoService {
         pedido.setItems(items);
         pedidoRepository.guardar(pedido);
 
-        Map<String, String> resultado = new LinkedHashMap<>();
+        Map<String, Object> resultado = new LinkedHashMap<>();
         resultado.put("estado", "OK");
         resultado.put("numeroPedido", pedidoDTO.getNumeroPedido());
         return resultado;

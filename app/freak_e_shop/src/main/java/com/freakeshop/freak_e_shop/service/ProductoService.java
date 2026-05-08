@@ -48,28 +48,28 @@ public class ProductoService {
         todos.addAll(camisaRepo.obtenerTodos());
         todos.addAll(figuraRepo.obtenerTodos());
         todos.addAll(pelucheRepo.obtenerTodos());
+
+        // Sincronizar stock desde el repositorio de stock
+        Map<String, Integer> stockMap = stockRepo.obtenerTodos();
+        for (Producto p : todos) {
+            p.setStock(stockMap.getOrDefault(p.getId(), 0));
+        }
         return todos;
     }
 
     // Busca un producto por id en todos los repositorios.
     public Producto obtenerPorId(String id) {
-        Producto p;
+        Producto p = null;
         p = accesorioRepo.buscarPorId(id);
-        if (p != null)
-            return p;
-        p = mochilaRepo.buscarPorId(id);
-        if (p != null)
-            return p;
-        p = comicRepo.buscarPorId(id);
-        if (p != null)
-            return p;
-        p = camisaRepo.buscarPorId(id);
-        if (p != null)
-            return p;
-        p = figuraRepo.buscarPorId(id);
-        if (p != null)
-            return p;
-        p = pelucheRepo.buscarPorId(id);
+        if (p == null) p = mochilaRepo.buscarPorId(id);
+        if (p == null) p = comicRepo.buscarPorId(id);
+        if (p == null) p = camisaRepo.buscarPorId(id);
+        if (p == null) p = figuraRepo.buscarPorId(id);
+        if (p == null) p = pelucheRepo.buscarPorId(id);
+        
+        if (p != null) {
+            p.setStock(stockRepo.obtenerStock(id));
+        }
         return p;
     }
 
@@ -121,7 +121,7 @@ public class ProductoService {
     }
 
     public Double obtenerPrecioMaximoGlobal() {
-        return 1000000.0;
+        return 5000000.0;
     }
 
     public com.freakeshop.freak_e_shop.dto.PaginaResultadoDTO<ProductoDTO> obtenerPaginaCatalogo(
@@ -247,6 +247,16 @@ public class ProductoService {
     // la categoría elegida.
     // Genera un ID lineal con prefijo de categoría (ej: A0001, M0001, CO001).
     public void crearProducto(ProductoDTO dto) {
+        if (dto.getPrecio() < 1000) {
+            throw new IllegalArgumentException("El precio mínimo permitido es 1.000 COP.");
+        }
+        if (dto.getPrecio() > 5000000) {
+            throw new IllegalArgumentException("El precio máximo permitido es 5.000.000 COP.");
+        }
+        // Truncar a 3 decimales
+        double precioTruncado = Math.floor(dto.getPrecio() * 1000) / 1000.0;
+        dto.setPrecio(precioTruncado);
+
         String id = categoriaIdConfig.generarId(dto.getCategoria(), obtenerPorCategoria(dto.getCategoria()));
         Producto p = null;
 
@@ -288,6 +298,16 @@ public class ProductoService {
     // Localiza el producto por su ID, actualiza sus atributos y persiste los
     // cambios.
     public void modificarProducto(ProductoDTO dto) {
+        if (dto.getPrecio() < 1000) {
+            throw new IllegalArgumentException("El precio mínimo permitido es 1.000 COP.");
+        }
+        if (dto.getPrecio() > 5000000) {
+            throw new IllegalArgumentException("El precio máximo permitido es 5.000.000 COP.");
+        }
+        // Truncar a 3 decimales
+        double precioTruncado = Math.floor(dto.getPrecio() * 1000) / 1000.0;
+        dto.setPrecio(precioTruncado);
+
         String id = dto.getId();
         Producto p = obtenerPorId(id);
         if (p == null)

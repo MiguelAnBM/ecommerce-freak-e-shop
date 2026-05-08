@@ -23,7 +23,7 @@ public class ReporteController {
         }
 
         model.addAttribute("reporte", reporteService.generarReporte());
-        model.addAttribute("historial", reporteService.obtenerHistorialPaginado(paginaReporte));
+        model.addAttribute("pedidosCompletos", reporteService.obtenerHistorialCompleto());
 
         return "admin/reportes";
     }

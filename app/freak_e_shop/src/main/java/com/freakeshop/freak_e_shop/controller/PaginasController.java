@@ -18,6 +18,12 @@ public class PaginasController {
     private final StockService stockService;
     private final CarritoService carritoService;
 
+    @org.springframework.beans.factory.annotation.Value("${app.config.iva}")
+    private double ivaPorcentaje;
+
+    @org.springframework.beans.factory.annotation.Value("${app.config.envio}")
+    private double costoEnvio;
+
     public PaginasController(ProductoService productoService,
                              StockService stockService,
                              CarritoService carritoService) {
@@ -73,7 +79,15 @@ public class PaginasController {
     public String carrito(Model model) {
         model.addAttribute("items", carritoService.obtenerItems());
         model.addAttribute("total", carritoService.obtenerTotal());
+        model.addAttribute("ivaPorcentaje", ivaPorcentaje);
+        model.addAttribute("costoEnvio", costoEnvio);
         return "cart";
+    }
+
+    @GetMapping("/login")
+    public String login(@RequestParam(required = false) String returnUrl, Model model) {
+        model.addAttribute("returnUrl", returnUrl);
+        return "login";
     }
 
     @GetMapping("/admin")

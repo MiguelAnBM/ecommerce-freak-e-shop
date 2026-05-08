@@ -48,29 +48,68 @@ public class CarritoService {
                 item.put("cantidad", entry.getValue());
                 item.put("subtotal", p.getPrecio() * entry.getValue());
                 item.put("categoria", productoService.obtenerCategoria(p));
+                item.put("stockDisponible", stockService.obtenerStock(entry.getKey()));
                 resultado.add(item);
             }
         }
         return resultado;
     }
 
-    // Elimina un producto del carrito (devuelve stock).
+    // Elimina un producto del carrito y devuelve su stock.
     public void eliminarProducto(String productoId) {
         Integer cantidad = items.remove(productoId);
         if (cantidad != null) {
-            // Devolver stock
             int stockActual = stockService.obtenerStock(productoId);
             stockService.actualizarStock(productoId, stockActual + cantidad);
         }
     }
 
-    // Vacía todo el carrito y devuelve stock.
+    // Vacía todo el carrito y devuelve el stock.
     public void vaciar() {
         for (Map.Entry<String, Integer> entry : items.entrySet()) {
             int stockActual = stockService.obtenerStock(entry.getKey());
             stockService.actualizarStock(entry.getKey(), stockActual + entry.getValue());
         }
         items.clear();
+    }
+
+    // Actualiza la cantidad de un producto y ajusta el stock diferencialmente.
+    public Map<String, Object> actualizarCantidad(String productoId, int nuevaCantidad) {
+        if (nuevaCantidad < 1) {
+            throw new IllegalArgumentException("La cantidad debe ser al menos 1");
+        }
+
+        Integer cantidadAnterior = items.get(productoId);
+        if (cantidadAnterior == null) {
+            throw new IllegalArgumentException("El producto no está en el carrito");
+        }
+
+        int stockActual = stockService.obtenerStock(productoId);
+        int diferencia = nuevaCantidad - cantidadAnterior;
+
+        if (diferencia > 0) {
+            // Se quiere aumentar: verificar si hay stock suficiente
+            if (stockActual < diferencia) {
+                return Map.of("estado", "ERROR", "mensaje", "Stock insuficiente");
+            }
+            stockService.actualizarStock(productoId, stockActual - diferencia);
+        } else if (diferencia < 0) {
+            // Se quiere reducir: devolver stock
+            stockService.actualizarStock(productoId, stockActual + Math.abs(diferencia));
+        }
+
+        items.put(productoId, nuevaCantidad);
+        
+        Producto p = productoService.obtenerPorId(productoId);
+        double nuevoSubtotal = p.getPrecio() * nuevaCantidad;
+        
+        Map<String, Object> respuesta = new LinkedHashMap<>();
+        respuesta.put("estado", "OK");
+        respuesta.put("nuevaCantidad", nuevaCantidad);
+        respuesta.put("stockRestante", stockService.obtenerStock(productoId));
+        respuesta.put("nuevoSubtotal", nuevoSubtotal);
+        respuesta.put("nuevoTotal", obtenerTotal());
+        return respuesta;
     }
 
     // Calcula el total del carrito.
@@ -85,25 +124,24 @@ public class CarritoService {
         return total;
     }
 
-    // Retorna la cantidad total de artículos en el carrito.
     public int obtenerCantidadTotal() {
         return items.values().stream().mapToInt(Integer::intValue).sum();
     }
 
-    // Cuenta los ítems que todavía existen válidamente en la tienda.
     public int contarItemsValidos() {
         items.keySet().removeIf(id -> productoService.obtenerPorId(id) == null);
         return obtenerCantidadTotal();
     }
 
-    // Vacía el carrito SIN devolver stock.
-    // Se usa al confirmar un pedido, ya que el stock fue reservado al añadir.
+    // Vacía el carrito SIN devolver stock (ya fue descontado).
     public void vaciarSinDevolverStock() {
         items.clear();
     }
 
-    // Elimina el producto de los carritos de todas las sesiones activas (sin
-    // devolver stock).
+    public Map<String, Integer> getItemsMap() {
+        return new LinkedHashMap<>(items);
+    }
+
     public static void eliminarProductoDeTodasLasSesiones(String productoId) {
         for (jakarta.servlet.http.HttpSession session : com.freakeshop.freak_e_shop.SessionRegistry.getSessions()
                 .values()) {
@@ -113,7 +151,6 @@ public class CarritoService {
                     carrito.items.remove(productoId);
                 }
             } catch (Exception e) {
-                // Ignora las sesiones invalidadas
             }
         }
     }

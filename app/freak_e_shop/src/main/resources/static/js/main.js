@@ -35,40 +35,48 @@ document.addEventListener('DOMContentLoaded', function () {
     // ── Inicialización de Base de Datos Simulada (Usuarios) ───
     function getStoredUsers() {
         const stored = localStorage.getItem('stride_db_users');
-        if (stored) return JSON.parse(stored);
+        let users = stored ? JSON.parse(stored) : [];
+        
         const defaults = [
             { email: 'admin', password: 'admin123', role: 'admin', name: 'Administrador' },
             { email: 'user@ejemplo.com', password: 'user123', role: 'user', name: 'Usuario Prueba' }
         ];
-        localStorage.setItem('stride_db_users', JSON.stringify(defaults));
-        return defaults;
+
+        // Asegurar que el admin y el usuario de prueba existan
+        defaults.forEach(def => {
+            if (!users.some(u => u.email === def.email)) {
+                users.push(def);
+            }
+        });
+
+        localStorage.setItem('stride_db_users', JSON.stringify(users));
+        return users;
     }
 
     // Simulación de autenticación
     async function authenticateUser(username, password, role) {
-        if (role === 'admin' && username === 'admin' && password === 'admin123') {
+        const users = getStoredUsers();
+        const found = users.find(u => u.email === username.trim() && u.password === password.trim() && u.role === role);
+        
+        if (found) {
             try {
-                await fetch('/api/login', { method: 'POST' });
+                const syncUrl = role === 'admin' ? '/api/login' : '/api/login-usuario';
+                const syncResponse = await fetch(syncUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(found)
+                });
+                if (!syncResponse.ok) {
+                    throw new Error("No se pudo iniciar la sesión en el servidor.");
+                }
             } catch(e) {
                 console.error("Error sincronizando sesión en el servidor:", e);
+                throw new Error("Error de conexión con el servidor. Inténtalo de nuevo.");
             }
-            return { success: true, user: { email: 'admin', role: 'admin', name: 'Administrador' } };
+            return { success: true, user: found };
+        } else {
+            throw new Error('Credenciales incorrectas');
         }
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                const userTrim = username.trim();
-                const passTrim = password.trim();
-
-                const users = getStoredUsers();
-                const found = users.find(u => u.email === userTrim && u.password === passTrim && u.role === role);
-                
-                if (found) {
-                    resolve({ success: true, user: found });
-                } else {
-                    reject(new Error('Credenciales incorrectas'));
-                }
-            }, 800);
-        });
     }
 
     async function registerUser(name, email, password) {
@@ -128,26 +136,37 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     window.logout = async function() {
-        const activeUserStr = localStorage.getItem('stride_active_user');
-        if (activeUserStr) {
-            try {
-                const activeUser = JSON.parse(activeUserStr);
-                if (activeUser.role === 'admin') {
-                    await fetch('/api/logout', { method: 'POST' });
-                }
-            } catch (e) {
-                console.error("Error validando usuario activo al cerrar sesión:", e);
-            }
+        try {
+            // Siempre llamamos al servidor para invalidar la sesión de Spring
+            await fetch('/api/logout', { method: 'POST' });
+        } catch (e) {
+            console.error("Error al cerrar sesión en el servidor:", e);
         }
         localStorage.removeItem('stride_active_user');
         window.location.href = '/';
     };
 
-    function checkAuthStatus() {
+    async function checkAuthStatus() {
         const activeUserStr = localStorage.getItem('stride_active_user');
         if (!activeUserStr) return;
         
         const activeUser = JSON.parse(activeUserStr);
+
+        // Validar sesión con el servidor si es admin
+        if (activeUser.role === 'admin') {
+            try {
+                const response = await fetch('/api/check-session');
+                if (!response.ok) {
+                    throw new Error("Sesión expirada");
+                }
+            } catch (e) {
+                console.warn("La sesión del servidor no coincide con el estado local. Limpiando...");
+                localStorage.removeItem('stride_active_user');
+                window.location.reload();
+                return;
+            }
+        }
+        
         const icon = document.getElementById('userIcon');
         if (icon) {
             icon.classList.remove('bi-person-circle');
@@ -160,6 +179,7 @@ document.addEventListener('DOMContentLoaded', function () {
             
             if (activeUser.role === 'admin') {
                 html += `<li><a class="dropdown-item" href="/admin">Panel de Administración</a></li>`;
+                html += `<li><a class="dropdown-item" href="/admin/reportes">Reportes</a></li>`;
             }
             
             html += `<li><a class="dropdown-item text-danger" href="#" onclick="logout()">Cerrar sesión</a></li>`;
@@ -171,13 +191,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     handleLoginForm('userLoginForm', 'user', (user) => {
         login(user);
+        // Si estamos en la página del carrito, recargamos para que el usuario pueda pagar
+        if (window.location.pathname.includes('/cart') || window.location.pathname.includes('/carrito')) {
+            window.location.reload();
+        }
     });
 
     handleLoginForm('adminLoginForm', 'admin', (user) => {
         login(user);
-        if (window.location.pathname !== '/admin') {
-            window.location.href = '/admin';
-        }
+        window.location.href = '/admin';
     });
 
     const registerForm = document.getElementById('registerForm');
@@ -195,6 +217,14 @@ document.addEventListener('DOMContentLoaded', function () {
             
             try {
                 const result = await registerUser(nameInput.value, emailInput.value, passwordInput.value);
+                
+                // Sincronizar sesión con el servidor tras registro
+                await fetch('/api/login-usuario', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(result.user)
+                });
+
                 btn.innerHTML = '<i class="bi bi-check-circle"></i> ¡Cuenta Creada!';
                 btn.classList.replace('btn-stride-primary', 'btn-success');
                 setTimeout(() => {
@@ -331,8 +361,11 @@ function initNavbarSearch() {
 
 // Helper para formatear precio si no existe globalmente
 function formatearPrecioCOP(precio) {
-    const num = Math.round(precio);
-    return '$ ' + num.toLocaleString('es-CO', { maximumFractionDigits: 0 });
+    const valorTruncado = Math.trunc(precio * 1000) / 1000;
+    return '$ ' + valorTruncado.toLocaleString('es-CO', { 
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 3 
+    });
 }
 
 // ── Utilidades ─────────────────────────────────────

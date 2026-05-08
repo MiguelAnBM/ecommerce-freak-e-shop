@@ -97,6 +97,12 @@ public class ReporteService {
         return reporte;
     }
 
+    public List<Pedido> obtenerHistorialCompleto() {
+        List<Pedido> pedidos = pedidoRepository.obtenerTodos();
+        Collections.reverse(pedidos);
+        return pedidos;
+    }
+
     public PaginaResultadoDTO<Pedido> obtenerHistorialPaginado(int pagina) {
         List<Pedido> pedidos = pedidoRepository.obtenerTodos();
         // Invertir para mostrar del más reciente al más antiguo

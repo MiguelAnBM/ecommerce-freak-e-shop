@@ -32,10 +32,10 @@ public class CarritoJsonHelper {
             sb.append("{");
             sb.append("\"id\":\"").append(escaparJson(p.getId())).append("\",");
             sb.append("\"nombre\":\"").append(escaparJson(p.getNombre())).append("\",");
-            sb.append("\"precio\":").append((long) p.getPrecio()).append(",");
+            sb.append("\"precio\":").append(p.getPrecio()).append(",");
             sb.append("\"imagen\":\"").append(escaparJson(p.getImagen())).append("\",");
             sb.append("\"cantidad\":").append(cantidad).append(",");
-            sb.append("\"subtotal\":").append((long) subtotal);
+            sb.append("\"subtotal\":").append(subtotal);
             sb.append("}");
         }
 

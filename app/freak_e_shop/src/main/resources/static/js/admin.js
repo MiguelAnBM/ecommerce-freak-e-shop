@@ -127,14 +127,6 @@ async function openProductForm(id = null) {
     }
 }
 
-// Restablece el localStorage a los productos por defecto.
-async function resetToDefaultProducts() {
-    if (confirm('¿Estás seguro de que deseas restablecer todos los productos de prueba? Se perderán los cambios manuales.')) {
-        localStorage.removeItem('stride_db_products');
-        location.reload();
-    }
-}
-
 // Maneja la eliminación con confirmación.
 async function handleDeleteProduct(id) {
     if (confirm('¿Estás seguro de que deseas eliminar este producto? Esta acción no se puede deshacer.')) {

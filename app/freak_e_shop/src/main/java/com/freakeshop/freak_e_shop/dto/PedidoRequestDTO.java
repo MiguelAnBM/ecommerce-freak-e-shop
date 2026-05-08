@@ -12,6 +12,8 @@ public class PedidoRequestDTO {
     private String metodoPago; // "NEQUI" | "CONTRAENTREGA"
     private List<ItemPedidoDTO> items;
     private double total;
+    private double impuesto;
+    private double envio;
 
     public PedidoRequestDTO() {
     }
@@ -70,5 +72,21 @@ public class PedidoRequestDTO {
 
     public void setTotal(double total) {
         this.total = total;
+    }
+
+    public double getImpuesto() {
+        return impuesto;
+    }
+
+    public void setImpuesto(double impuesto) {
+        this.impuesto = impuesto;
+    }
+
+    public double getEnvio() {
+        return envio;
+    }
+
+    public void setEnvio(double envio) {
+        this.envio = envio;
     }
 }

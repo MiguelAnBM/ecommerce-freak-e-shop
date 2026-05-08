@@ -36,12 +36,16 @@ public class StockRepository {
     }
 
     public boolean disminuirStock(String productoId) {
+        return disminuirStock(productoId, 1);
+    }
+
+    public boolean disminuirStock(String productoId, int cantidad) {
         Map<String, Integer> stockMap = obtenerTodos();
         int actual = stockMap.getOrDefault(productoId, 0);
-        if (actual <= 0) {
+        if (actual < cantidad) {
             return false;
         }
-        stockMap.put(productoId, actual - 1);
+        stockMap.put(productoId, actual - cantidad);
         reescribir(stockMap);
         return true;
     }

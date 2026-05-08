@@ -23,10 +23,15 @@ public class PedidoController {
     // Confirma un pedido: vacía el carrito y retorna estado de éxito.
 
     @PostMapping("/pedido/confirmar")
-    public ResponseEntity<Map<String, String>> confirmarPedido(
-            @RequestBody PedidoRequestDTO pedido) {
+    public ResponseEntity<?> confirmarPedido(
+            @RequestBody PedidoRequestDTO pedido, jakarta.servlet.http.HttpSession session) {
         try {
-            Map<String, String> resultado = pedidoService.confirmarPedido(pedido);
+            Map<String, Object> resultado = pedidoService.confirmarPedido(pedido, session);
+            
+            if ("ERROR".equals(resultado.get("estado")) && "no_autenticado".equals(resultado.get("error"))) {
+                return ResponseEntity.status(401).body(resultado);
+            }
+            
             return ResponseEntity.ok(resultado);
         } catch (Exception e) {
             Map<String, String> error = Map.of(

@@ -121,47 +121,47 @@ public class DataInitializer implements CommandLineRunner {
         if (stockRepo.obtenerStock("P0001") == 0)
             stockRepo.actualizarStock("P0001", 10);
 
-        // 7. Figura Destacada 1 → ID: F9997
-        if (figuraRepo.buscarPorId("F9997") == null) {
+        // 7. Figura Destacada 1 → ID: F0002
+        if (figuraRepo.buscarPorId("F0002") == null) {
             FiguraColeccionable fig2 = new FiguraColeccionable(
-                    "F9997", "Figura Articulada Spider-Man Miles Morales",
+                    "F0002", "Figura Articulada Spider-Man Miles Morales",
                     "Espectacular figura de acción de 15cm altamente articulada, incluye accesorios intercambiables y base dinámica. Edición especial de coleccionista.",
                     89.99, "https://placehold.co/600x600/2a2a2a/f9f9f9?text=Spider-Man+Miles",
                     "Marvel", true);
             fig2.setDestacado(true);
             figuraRepo.guardar(fig2);
-            System.out.println("Producto destacado creado: Figura (F9997)");
+            System.out.println("Producto destacado creado: Figura (F0002)");
         }
-        if (stockRepo.obtenerStock("F9997") == 0)
-            stockRepo.actualizarStock("F9997", 5);
+        if (stockRepo.obtenerStock("F0002") == 0)
+            stockRepo.actualizarStock("F0002", 5);
 
-        // 8. Accesorio Destacado 2 → ID: A9998
-        if (accesorioRepo.buscarPorId("A9998") == null) {
+        // 8. Accesorio Destacado 2 → ID: A0002
+        if (accesorioRepo.buscarPorId("A0002") == null) {
             Accesorio acc2 = new Accesorio(
-                    "A9998", "Anillo Único El Señor de los Anillos",
+                    "A0002", "Anillo Único El Señor de los Anillos",
                     "Réplica exacta bañada en oro de 24k con inscripción élfica láser. Incluye cadena para colgar y caja de madera tallada.",
                     120.00, "https://placehold.co/600x600/2a2a2a/f9f9f9?text=Anillo+Unico",
                     "Anillo");
             acc2.setDestacado(true);
             accesorioRepo.guardar(acc2);
-            System.out.println("Producto destacado creado: Accesorio (A9998)");
+            System.out.println("Producto destacado creado: Accesorio (A0002)");
         }
-        if (stockRepo.obtenerStock("A9998") == 0)
-            stockRepo.actualizarStock("A9998", 3);
+        if (stockRepo.obtenerStock("A0002") == 0)
+            stockRepo.actualizarStock("A0002", 3);
 
-        // 9. Mochila Destacada 3 → ID: M9999
-        if (mochilaRepo.buscarPorId("M9999") == null) {
+        // 9. Mochila Destacada 3 → ID: M0002
+        if (mochilaRepo.buscarPorId("M0002") == null) {
             Mochila moc2 = new Mochila(
-                    "M9999", "Mochila Táctica Cyberpunk 2077",
+                    "M0002", "Mochila Táctica Cyberpunk 2077",
                     "Mochila urbana de diseño futurista con luces LED integradas, puerto de carga USB y materiales impermeables de alta resistencia.",
                     145.50, "https://placehold.co/600x600/2a2a2a/f9f9f9?text=Cyberpunk+Bag",
                     "L", "Nylon/Polímero", true);
             moc2.setDestacado(true);
             mochilaRepo.guardar(moc2);
-            System.out.println("Producto destacado creado: Mochila (M9999)");
+            System.out.println("Producto destacado creado: Mochila (M0002)");
         }
-        if (stockRepo.obtenerStock("M9999") == 0)
-            stockRepo.actualizarStock("M9999", 7);
+        if (stockRepo.obtenerStock("M0002") == 0)
+            stockRepo.actualizarStock("M0002", 7);
 
         System.out.println("DataInitializer completado.");
     }

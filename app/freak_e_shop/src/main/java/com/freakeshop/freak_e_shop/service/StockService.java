@@ -26,6 +26,10 @@ public class StockService {
         return stockRepo.disminuirStock(productoId);
     }
 
+    public boolean disminuirStock(String productoId, int cantidad) {
+        return stockRepo.disminuirStock(productoId, cantidad);
+    }
+
     public Map<String, Integer> obtenerTodos() {
         return stockRepo.obtenerTodos();
     }

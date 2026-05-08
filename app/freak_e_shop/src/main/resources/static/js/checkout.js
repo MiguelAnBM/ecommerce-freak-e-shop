@@ -264,8 +264,12 @@
     }
 
     function formatearCOP(precio) {
-        const num = Math.round(precio);
-        return '$ ' + num.toLocaleString('es-CO', { maximumFractionDigits: 0 });
+        // Truncar a 3 decimales para evitar redondeos automáticos de toLocaleString
+        const valorTruncado = Math.trunc(precio * 1000) / 1000;
+        return '$ ' + valorTruncado.toLocaleString('es-CO', { 
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 3 
+        });
     }
 
     function construirResumenFactura() {
@@ -284,13 +288,24 @@
         lineas.push(' PRODUCTOS');
 
         cartItems.forEach(function (item) {
-            lineas.push('  ' + truncar(item.nombre, 40));
-            lineas.push('    Cant.: ' + item.cantidad + '   Precio: ' + formatearCOP(item.precio));
-            lineas.push('    Subtotal: ' + formatearCOP(item.subtotal));
+            lineas.push('  ' + truncar(item.nombre || 'Producto', 40));
+            lineas.push('    Cant.: ' + item.cantidad + '   Precio: ' + formatearCOP(item.precio || 0));
+            lineas.push('    Subtotal: ' + formatearCOP(item.subtotal || 0));
         });
 
         lineas.push('─'.repeat(45));
-        lineas.push('  TOTAL A PAGAR: ' + formatearCOP(cartTotal));
+        
+        const subtotal = cartTotal;
+        const iva = subtotal * (window.__cartData.ivaPorcentaje / 100);
+        const envioOriginal = window.__cartData.costoEnvio;
+        const envio = subtotal > 70000 ? 0 : envioOriginal;
+        const totalFinal = subtotal + iva + envio;
+
+        lineas.push('  SUBTOTAL:      ' + formatearCOP(subtotal));
+        lineas.push('  IVA (' + window.__cartData.ivaPorcentaje + '%):     ' + formatearCOP(iva));
+        lineas.push('  ENVÍO:         ' + (envio === 0 ? 'GRATIS' : formatearCOP(envio)));
+        lineas.push('─'.repeat(45));
+        lineas.push('  TOTAL A PAGAR: ' + formatearCOP(totalFinal));
 
         pre.textContent = lineas.join('\n');
     }
@@ -317,18 +332,29 @@
         txt += lin + '\n';
 
         cartItems.forEach(function (item) {
-            var nombre = item.nombre.length > 40 ? item.nombre.substring(0, 37) + '...' : item.nombre;
+            const nombreStr = item.nombre || 'Producto';
+            const nombre = nombreStr.length > 40 ? nombreStr.substring(0, 37) + '...' : nombreStr;
             txt += rellenar(nombre, W) + '\n';
-            txt += rellenar('  Cant.: ' + item.cantidad + '   |   Precio: ' + formatearCOP(item.precio), W) + '\n';
-            txt += rellenar('  Subtotal  : ' + formatearCOP(item.subtotal), W) + '\n';
+            txt += rellenar('  Cant.: ' + item.cantidad + '   |   Precio: ' + formatearCOP(item.precio || 0), W) + '\n';
+            txt += rellenar('  Subtotal  : ' + formatearCOP(item.subtotal || 0), W) + '\n';
             txt += lin + '\n';
         });
 
         var metodoStr = datosPago.metodoPago === 'NEQUI' ? 'Transferencia Nequi' : 'Contraentrega';
+        const subtotal = cartTotal;
+        const iva = subtotal * (window.__cartData.ivaPorcentaje / 100);
+        const envioOriginal = window.__cartData.costoEnvio;
+        const envio = subtotal > 70000 ? 0 : envioOriginal;
+        const totalFinal = subtotal + iva + envio;
+
         txt += sep + '\n';
         txt += rellenar('MÉTODO DE PAGO : ' + metodoStr, W) + '\n';
         txt += sep + '\n';
-        txt += rellenar('TOTAL A PAGAR  : ' + formatearCOP(cartTotal), W) + '\n';
+        txt += rellenar('SUBTOTAL       : ' + formatearCOP(subtotal), W) + '\n';
+        txt += rellenar('IVA (' + window.__cartData.ivaPorcentaje + '%)      : ' + formatearCOP(iva), W) + '\n';
+        txt += rellenar('COSTO ENVÍO    : ' + (envio === 0 ? 'GRATIS' : formatearCOP(envio)), W) + '\n';
+        txt += lin + '\n';
+        txt += rellenar('TOTAL A PAGAR  : ' + formatearCOP(totalFinal), W) + '\n';
         txt += sep + '\n';
         txt += centrarPad('Gracias por tu compra. ¡Hasta pronto!', W) + '\n';
         txt += sep + '\n';
@@ -346,6 +372,12 @@
             };
         });
 
+        const subtotal = cartTotal;
+        const iva = subtotal * (window.__cartData.ivaPorcentaje / 100);
+        const envioOriginal = window.__cartData.costoEnvio;
+        const envio = subtotal > 70000 ? 0 : envioOriginal;
+        const totalFinal = subtotal + iva + envio;
+
         const body = {
             numeroPedido: datosPago.numeroPedido,
             fecha: datosPago.fecha,
@@ -353,7 +385,9 @@
             telefono: datosPago.telefono,
             metodoPago: datosPago.metodoPago,
             items: itemsPayload,
-            total: cartTotal
+            total: totalFinal,
+            impuesto: iva,
+            envio: envio
         };
 
         fetch('/pedido/confirmar', {
@@ -362,10 +396,16 @@
             body: JSON.stringify(body)
         })
             .then(function (response) {
+                if (response.status === 401) {
+                    const loginModal = new bootstrap.Modal(document.getElementById('userLoginModal'));
+                    loginModal.show();
+                    return;
+                }
                 if (!response.ok) throw new Error('Respuesta no OK');
                 return response.json();
             })
             .then(function (data) {
+                if (!data) return;
                 if (data.estado === 'OK') {
                     // Pedido exitoso
                     var mensajeEl = document.getElementById('pagoMensajeEstado');
@@ -386,12 +426,144 @@
                     throw new Error('Estado no OK');
                 }
             })
-            .catch(function () {
+            .catch(function (err) {
+                console.error(err);
                 var mensajeEl = document.getElementById('pagoMensajeEstado');
                 mensajeEl.className = 'pago-mensaje-error';
                 mensajeEl.textContent = 'Hubo un problema al confirmar tu pedido. Por favor intenta de nuevo.';
                 mensajeEl.style.display = 'block';
             });
+    }
+
+    // ── Gestión del flujo de Checkout ─────────────────
+    window.gestionarCheckout = async function() {
+        try {
+            const response = await fetch('/api/check-session');
+            if (response.ok) {
+                const data = await response.json();
+                if (data.logged) {
+                    abrirModalPago();
+                    return;
+                }
+            }
+            
+            // Si no está logueado o hubo error controlado (401)
+            const loginModal = new bootstrap.Modal(document.getElementById('userLoginModal'));
+            loginModal.show();
+        } catch (e) {
+            console.error("Error al verificar sesión:", e);
+            const loginModal = new bootstrap.Modal(document.getElementById('userLoginModal'));
+            loginModal.show();
+        }
+    };
+
+    // ── Gestión de cantidad en tiempo real ─────────────
+    window.cambiarCantidad = async function(btn, delta) {
+        const container = btn.closest('.qty-control');
+        const productoId = container.dataset.productoId;
+        const stockMax = parseInt(container.dataset.stock);
+        const input = container.querySelector('.qty-input');
+        const errorEl = container.nextElementSibling;
+        
+        let currentQty = parseInt(input.value);
+        let newQty = currentQty + delta;
+        
+        if (newQty < 1 || newQty > stockMax) return;
+        
+        // Deshabilitar botones temporalmente
+        const buttons = container.querySelectorAll('.qty-btn');
+        buttons.forEach(b => b.disabled = true);
+        
+        try {
+            const response = await fetch('/carrito/actualizar', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ productoId: productoId, nuevaCantidad: newQty })
+            });
+            
+            const data = await response.json();
+            
+            if (data.estado === 'OK') {
+                input.value = newQty;
+                actualizarVistaCarrito(productoId, data);
+                
+                // Actualizar estado de botones
+                container.querySelector('.btn-minus').disabled = (newQty <= 1);
+                container.querySelector('.btn-plus').disabled = (newQty >= stockMax);
+                
+                if (errorEl) errorEl.style.display = 'none';
+            } else {
+                // Revertir
+                input.value = currentQty;
+                container.querySelector('.btn-minus').disabled = (currentQty <= 1);
+                container.querySelector('.btn-plus').disabled = (currentQty >= stockMax);
+                
+                if (errorEl) {
+                    errorEl.textContent = data.mensaje || 'Error';
+                    errorEl.style.display = 'block';
+                    setTimeout(() => errorEl.style.display = 'none', 3000);
+                }
+            }
+        } catch (e) {
+            input.value = currentQty;
+            console.error(e);
+        } finally {
+            // Re-evaluar deshabilitación si no hubo error
+            const val = parseInt(input.value);
+            container.querySelector('.btn-minus').disabled = (val <= 1);
+            container.querySelector('.btn-plus').disabled = (val >= stockMax);
+        }
+    };
+
+    function actualizarVistaCarrito(productoId, data) {
+        // 1. Actualizar subtotal del ítem
+        const items = document.querySelectorAll('.cart-item');
+        items.forEach(item => {
+            const control = item.querySelector('.qty-control');
+            if (control && control.dataset.productoId === productoId) {
+                const subtotalEl = item.querySelector('.cart-total');
+                if (subtotalEl) subtotalEl.textContent = formatearCOP(data.nuevoSubtotal);
+            }
+        });
+
+        // 2. Actualizar resumen de totales
+        const subtotalEl = document.querySelector('.summary-row .value'); // Primero es subtotal
+        if (subtotalEl) subtotalEl.textContent = formatearCOP(data.nuevoTotal);
+
+        const totalFinalEl = document.querySelector('.summary-total span:last-child');
+        
+        // Recalcular IVA y Envío
+        const iva = data.nuevoTotal * (window.__cartData.ivaPorcentaje / 100);
+        const envio = data.nuevoTotal > 70000 ? 0 : window.__cartData.costoEnvio;
+        
+        const rows = document.querySelectorAll('.summary-row');
+        if (rows.length >= 3) {
+            // 0: Subtotal, 1: Envio, 2: IVA
+            rows[1].querySelector('.value').textContent = (envio === 0 ? '$ 0' : formatearCOP(envio));
+            rows[2].querySelector('.value').textContent = formatearCOP(iva);
+        }
+
+        if (totalFinalEl) {
+            totalFinalEl.textContent = formatearCOP(data.nuevoTotal + iva + envio);
+        }
+
+        // Actualizar datos globales para el modal
+        window.__cartData.total = data.nuevoTotal;
+        cartTotal = data.nuevoTotal;
+        
+        // Actualizar cantidad en cartItems
+        const item = cartItems.find(i => i.id === productoId);
+        if (item) {
+            item.cantidad = data.nuevaCantidad;
+            item.subtotal = data.nuevoSubtotal;
+        }
+        
+        // Actualizar cartCount badge
+        const badge = document.querySelector('.cart-badge');
+        if (badge) {
+            const totalQty = cartItems.reduce((acc, i) => acc + i.cantidad, 0);
+            badge.textContent = totalQty;
+        }
     }
 
     // ── Utilidades de formato de texto ─────────────────

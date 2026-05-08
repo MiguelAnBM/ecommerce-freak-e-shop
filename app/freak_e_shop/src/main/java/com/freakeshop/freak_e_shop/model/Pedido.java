@@ -9,19 +9,23 @@ public class Pedido {
     private String telefono;
     private String metodoPago;
     private double total;
+    private double impuesto;
+    private double envio;
     private List<ItemPedido> items;
 
     public Pedido() {
     }
 
     public Pedido(String numeroPedido, String fecha, String direccion, String telefono, String metodoPago, double total,
-            List<ItemPedido> items) {
+            double impuesto, double envio, List<ItemPedido> items) {
         this.numeroPedido = numeroPedido;
         this.fecha = fecha;
         this.direccion = direccion;
         this.telefono = telefono;
         this.metodoPago = metodoPago;
         this.total = total;
+        this.impuesto = impuesto;
+        this.envio = envio;
         this.items = items;
     }
 
@@ -71,6 +75,22 @@ public class Pedido {
 
     public void setTotal(double total) {
         this.total = total;
+    }
+
+    public double getImpuesto() {
+        return impuesto;
+    }
+
+    public void setImpuesto(double impuesto) {
+        this.impuesto = impuesto;
+    }
+
+    public double getEnvio() {
+        return envio;
+    }
+
+    public void setEnvio(double envio) {
+        this.envio = envio;
     }
 
     public List<ItemPedido> getItems() {

@@ -25,7 +25,7 @@
                         <input type="hidden" name="pagina" value="1">
                         <input type="hidden" name="orden" th:value="${param.orden}" id="filterOrden">
                         <input type="hidden" name="filtrado" value="true">
-                        <input type="hidden" name="q" th:value="${param.q}" th:if="${param.q != null}">
+                        <input type="hidden" name="q" th:value="${param.q}">
                         
                         <div class="filter-group text-start">
                             <h4>Categorías</h4>
@@ -143,7 +143,7 @@
                         <!-- Anterior -->
                         <li class="page-item" th:classappend="${pagina.paginaActual <= 1} ? 'disabled'">
                             <a class="page-link" th:if="${pagina.paginaActual > 1}"
-                               th:href="@{/catalogo(pagina=${pagina.paginaActual - 1}, categoria=${param.categoria}, precioMin=${param.precioMin}, precioMax=${param.precioMax}, orden=${param.orden}, q=${param.q})}">
+                               th:href="@{/catalogo(pagina=${pagina.paginaActual - 1}, categoria=${categoriasActivas}, precioMin=${param.precioMin}, precioMax=${param.precioMax}, orden=${param.orden}, q=${param.q})}">
                                 <i class="bi bi-chevron-left"></i> Anterior
                             </a>
                             <span class="page-link" th:if="${pagina.paginaActual <= 1}">
@@ -160,14 +160,14 @@
                             <span class="page-link" th:if="${n != '...' and n == pagina.paginaActual}" th:text="${n}">1</span>
                             
                             <a class="page-link" th:if="${n != '...' and n != pagina.paginaActual}"
-                               th:href="@{/catalogo(pagina=${n}, categoria=${param.categoria}, precioMin=${param.precioMin}, precioMax=${param.precioMax}, orden=${param.orden}, q=${param.q})}"
+                               th:href="@{/catalogo(pagina=${n}, categoria=${categoriasActivas}, precioMin=${param.precioMin}, precioMax=${param.precioMax}, orden=${param.orden}, q=${param.q})}"
                                th:text="${n}">1</a>
                         </li>
 
                         <!-- Siguiente -->
                         <li class="page-item" th:classappend="${pagina.paginaActual >= pagina.totalPaginas} ? 'disabled'">
                             <a class="page-link" th:if="${pagina.paginaActual < pagina.totalPaginas}"
-                               th:href="@{/catalogo(pagina=${pagina.paginaActual + 1}, categoria=${param.categoria}, precioMin=${param.precioMin}, precioMax=${param.precioMax}, orden=${param.orden}, q=${param.q})}">
+                               th:href="@{/catalogo(pagina=${pagina.paginaActual + 1}, categoria=${categoriasActivas}, precioMin=${param.precioMin}, precioMax=${param.precioMax}, orden=${param.orden}, q=${param.q})}">
                                 Siguiente <i class="bi bi-chevron-right"></i>
                             </a>
                             <span class="page-link" th:if="${pagina.paginaActual >= pagina.totalPaginas}">

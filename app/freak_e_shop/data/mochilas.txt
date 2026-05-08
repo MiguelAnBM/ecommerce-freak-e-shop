@@ -1,2 +1,0 @@
-M0001;Mochila Attack on Titan;Mochila con diseño de las Tropas de Reconocimiento. Fabricada en poliéster resistente con compartimento acolchado.;45.5;https://i.pinimg.com/736x/84/65/c9/8465c972af17d277402de95cf2e10cf5.jpg;L;Poliéster 600D;true;true
-M9999;Mochila Táctica Cyberpunk 2077;Mochila urbana de diseño futurista con luces LED integradas, puerto de carga USB y materiales impermeables de alta resistencia.;145.5;https://placehold.co/600x600/2a2a2a/f9f9f9?text=Cyberpunk+Bag;L;Nylon/Polímero;true;true

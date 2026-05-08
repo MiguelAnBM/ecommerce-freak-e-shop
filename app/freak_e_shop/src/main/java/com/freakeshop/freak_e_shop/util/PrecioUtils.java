@@ -10,8 +10,9 @@ public class PrecioUtils {
     // Formatea precios a pesos colombianos.
     public String formatearCOP(double precio) {
         NumberFormat formato = NumberFormat.getNumberInstance(new Locale("es", "CO"));
-        formato.setMaximumFractionDigits(0);
+        formato.setMaximumFractionDigits(3);
         formato.setMinimumFractionDigits(0);
-        return "$ " + formato.format((long) precio);
+        formato.setGroupingUsed(true);
+        return "$ " + formato.format(precio);
     }
 }
