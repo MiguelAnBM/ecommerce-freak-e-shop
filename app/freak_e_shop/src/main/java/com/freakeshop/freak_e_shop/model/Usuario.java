@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package com.freakeshop.freak_e_shop.model;
 
 public abstract class Usuario {
@@ -18,6 +15,8 @@ public abstract class Usuario {
         this.contrasena = contrasena;
     }
 
+    // Método abstracto
+    public abstract String mostrarRol();
 
     // GETTERS
     public String getId() {

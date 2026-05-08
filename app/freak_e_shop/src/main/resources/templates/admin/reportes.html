@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Freak-E Shop - Reportes')}"></head>
+<body>
+
+<!-- ── Barra de navegación ──────────────────────────── -->
+<div th:replace="~{fragments/header :: navbar}"></div>
+
+<!-- ── Sección de Reportes ──────────────────────────── -->
+<section class="catalog-section fade-in-section">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="section-title mb-0">Reportes y Estadísticas</h2>
+                <p class="section-subtitle">Análisis de ventas y desempeño del catálogo</p>
+            </div>
+            <div>
+                <a th:href="@{/admin}" class="btn btn-accent"><i class="bi bi-arrow-left me-2"></i>Volver al Panel</a>
+            </div>
+        </div>
+
+        <!-- ── Tarjetas de Métricas ──────────────────────────── -->
+        <div class="row g-4 mb-5">
+            <div class="col-md-3 col-sm-6">
+                <div class="card bg-dark text-light border-secondary h-100 text-center p-3 shadow-sm" style="background-color: var(--stride-bg-card) !important;">
+                    <i class="bi bi-cart-check fs-1 text-accent mb-2"></i>
+                    <h5 class="card-title text-muted mb-1 fs-6">Ventas Realizadas</h5>
+                    <p class="card-text fs-2 fw-bold m-0" th:text="${reporte.totalVentas}">0</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="card bg-dark text-light border-secondary h-100 text-center p-3 shadow-sm" style="background-color: var(--stride-bg-card) !important;">
+                    <i class="bi bi-cash-coin fs-1 text-success mb-2"></i>
+                    <h5 class="card-title text-muted mb-1 fs-6">Ingresos Totales</h5>
+                    <p class="card-text fs-3 fw-bold text-success m-0" th:text="${@precioUtils.formatearCOP(reporte.ingresosTotales)}">$0</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="card bg-dark text-light border-secondary h-100 text-center p-3 shadow-sm" style="background-color: var(--stride-bg-card) !important;">
+                    <i class="bi bi-graph-up fs-1 text-warning mb-2"></i>
+                    <h5 class="card-title text-muted mb-1 fs-6">Promedio por Pedido</h5>
+                    <p class="card-text fs-3 fw-bold text-warning m-0" th:text="${@precioUtils.formatearCOP(reporte.ingresoPromedio)}">$0</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="card bg-dark text-light border-secondary h-100 text-center p-3 shadow-sm" style="background-color: var(--stride-bg-card) !important;">
+                    <i class="bi bi-star-fill fs-1 text-primary mb-2"></i>
+                    <h5 class="card-title text-muted mb-1 fs-6">Top Producto</h5>
+                    <p class="card-text fs-6 fw-bold m-0 text-truncate px-2" th:title="${reporte.productoMasVendidoNombre}" th:text="${reporte.productoMasVendidoNombre}">Ninguno</p>
+                    <small class="text-muted" th:if="${reporte.productoMasVendidoUnidades > 0}" th:text="${reporte.productoMasVendidoUnidades} + ' unidades'"></small>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${reporte.totalVentas == 0}" class="alert alert-secondary text-center p-5 border-secondary bg-dark" style="background-color: var(--stride-bg-card) !important;">
+            <i class="bi bi-inbox fs-1 d-block mb-3 text-accent"></i>
+            <h4 class="text-accent fw-bold">Aún no hay ventas registradas</h4>
+            <p class="text-accent">Los datos de tablas y gráficos aparecerán aquí una vez se confirmen los primeros pedidos.</p>
+        </div>
+
+        <div class="row g-4" th:if="${reporte.totalVentas > 0}">
+            <!-- ── Tabla: Ventas por Categoría ──────────────────────────── -->
+            <div class="col-lg-4 mb-4">
+                <div class="card bg-dark text-light border-secondary h-100" style="background-color: var(--stride-bg-card) !important;">
+                    <div class="card-header border-secondary bg-transparent pt-3 pb-2">
+                        <h5 class="mb-0 text-accent"><i class="bi bi-pie-chart me-2"></i>Ventas por Categoría</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table stride-table table-hover align-middle m-0">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th scope="col" class="ps-3">Categoría</th>
+                                        <th scope="col" class="text-center">Unid.</th>
+                                        <th scope="col" class="text-end pe-3">Ingresos</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="cat : ${reporte.ventasPorCategoria.keySet()}">
+                                        <td class="ps-3"><span class="badge bg-secondary" th:text="${cat}">Cat</span></td>
+                                        <td class="text-center" th:text="${reporte.ventasPorCategoria.get(cat)}">0</td>
+                                        <td class="text-end fw-bold pe-3" th:text="${@precioUtils.formatearCOP(reporte.ingresosPorCategoria.get(cat))}">$0</td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr class="table-active border-top-2 border-secondary" style="background-color: rgba(255,255,255,0.05);">
+                                        <th class="ps-3 py-3">TOTAL</th>
+                                        <th class="text-center py-3" th:text="${#aggregates.sum(reporte.ventasPorCategoria.values())}">0</th>
+                                        <th class="text-end pe-3 py-3 text-success fs-5" th:text="${@precioUtils.formatearCOP(reporte.ingresosTotales)}">$0</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── Tabla: Historial de Pedidos ──────────────────────────── -->
+            <div class="col-lg-8 mb-4">
+                <div class="card bg-dark text-light border-secondary h-100" style="background-color: var(--stride-bg-card) !important;">
+                    <div class="card-header border-secondary bg-transparent pt-3 pb-2 d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 text-accent"><i class="bi bi-clock-history me-2"></i>Historial de Pedidos</h5>
+                        <span class="badge bg-secondary" th:text="${historial.totalProductos} + ' pedidos'">0 pedidos</span>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table stride-table table-hover align-middle m-0" style="min-width: 600px;">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th scope="col" class="ps-3">ID Pedido</th>
+                                        <th scope="col">Fecha</th>
+                                        <th scope="col">Método Pago</th>
+                                        <th scope="col" class="text-end">Total</th>
+                                        <th scope="col" class="text-center pe-3">Detalle</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="pedido : ${historial.productos}">
+                                        <td class="ps-3 fw-bold font-monospace text-muted" th:text="${pedido.numeroPedido}">PED-000</td>
+                                        <td th:text="${pedido.fecha}">01/01/2000</td>
+                                        <td>
+                                            <span class="badge" th:classappend="${pedido.metodoPago == 'NEQUI' ? 'bg-info text-dark' : 'bg-secondary'}" th:text="${pedido.metodoPago}">NEQUI</span>
+                                        </td>
+                                        <td class="text-end fw-bold text-accent" th:text="${@precioUtils.formatearCOP(pedido.total)}">$0</td>
+                                        <td class="text-center pe-3">
+                                            <button type="button" class="btn btn-sm btn-outline-light" data-bs-toggle="popover" data-bs-trigger="focus" title="Artículos comprados" 
+                                                    th:data-bs-content="${#strings.listJoin(pedido.items.![cantidad + 'x ' + nombreProducto], ', ')}">
+                                                <i class="bi bi-box-seam"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- Paginación -->
+                    <div class="card-footer border-secondary bg-transparent py-3" th:if="${historial.totalPaginas > 1}">
+                        <nav aria-label="Navegación de historial">
+                            <ul class="pagination pagination-sm justify-content-center m-0">
+                                <li class="page-item" th:classappend="${historial.paginaActual == 1} ? 'disabled'">
+                                    <a class="page-link" th:href="@{/admin/reportes(paginaReporte=${historial.paginaActual - 1})}" tabindex="-1" aria-disabled="true">Anterior</a>
+                                </li>
+                                
+                                <li class="page-item" th:each="p : ${historial.elementosPaginacion}"
+                                    th:classappend="${p == historial.paginaActual} ? 'active' : (${p == '...'} ? 'disabled')">
+                                    <a class="page-link" th:if="${p != '...'}" th:href="@{/admin/reportes(paginaReporte=${p})}" th:text="${p}">1</a>
+                                    <span class="page-link" th:if="${p == '...'}" th:text="${p}">...</span>
+                                </li>
+
+                                <li class="page-item" th:classappend="${historial.paginaActual == historial.totalPaginas} ? 'disabled'">
+                                    <a class="page-link" th:href="@{/admin/reportes(paginaReporte=${historial.paginaActual + 1})}">Siguiente</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- ── Pie de página ────────────────────────────────── -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<!-- Scripts -->
+<div th:replace="~{fragments/scripts :: scripts}"></div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Inicializar popovers para el detalle de artículos
+        var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+        var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+            return new bootstrap.Popover(popoverTriggerEl)
+        })
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,2 @@
+F0001;Figura Luffy Gear 5;Figura de acción de Monkey D. Luffy en su transformación Gear 5. Incluye base decorativa y accesorios.;55.0;https://placehold.co/600x600/2a2a2a/f9f9f9?text=Figura+Luffy;One Piece;true;true
+F9997;Figura Articulada Spider-Man Miles Morales;Espectacular figura de acción de 15cm altamente articulada, incluye accesorios intercambiables y base dinámica. Edición especial de coleccionista.;89.99;https://placehold.co/600x600/2a2a2a/f9f9f9?text=Spider-Man+Miles;Marvel;true;true

@@ -1,21 +1,18 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="~{fragments/head :: head('Freak-E Shop - Inicio')}"></head>
 
 <body>
 
-    <!-- ========== NAVBAR ========== -->
+    <!-- ── Barra de navegación ──────────────────────────── -->
     <div th:replace="~{fragments/header :: navbar}"></div>
 
-
-    <!-- ============================================================
-     HERO SECTION
-     ============================================================ -->
+    <!-- ── Sección Hero (Banner principal) ──────────────── -->
     <section id="hero" class="hero-section">
         <div class="container">
             <div class="row align-items-center">
-                <!-- Left Content -->
+                <!-- Contenido izquierdo -->
                 <div class="col-lg-6">
                     <div class="hero-badge">
                         <i class="bi bi-lightning-charge-fill"></i>
@@ -33,92 +30,81 @@
                     </p>
 
                     <div class="hero-buttons">
-                        <a th:href="@{/catalog}" href="catalog.html" class="btn-stride btn-stride-primary">
+                        <a th:href="@{/catalogo}" href="catalog.html" class="btn-stride btn-stride-primary">
                             Compra ahora <i class="bi bi-arrow-right"></i>
                         </a>
-                        <a th:href="@{/categories}" href="#categories" class="btn-stride btn-stride-outline">
+                        <a th:href="@{/#categories}" href="#categories" class="btn-stride btn-stride-outline">
                             Explorar Categorías
                         </a>
                     </div>
 
-                    <!-- Stats -->
+                    <!-- Estadísticas -->
                     <div class="stats-bar">
                         <div class="row g-4">
                             <div class="col-auto">
                                 <div class="stat-item">
                                     <div class="stat-number">50K+</div>
-                                    <div class="stat-label"> Clientes satisfechos</div>
+                                    <div class="stat-label">Clientes Felices</div>
                                 </div>
                             </div>
                             <div class="col-auto">
                                 <div class="stat-item">
                                     <div class="stat-number">4.9 <i class="bi bi-star-fill star"></i></div>
-                                    <div class="stat-label">Calificación media</div>
+                                    <div class="stat-label">Calificación</div>
                                 </div>
                             </div>
                             <div class="col-auto">
                                 <div class="stat-item">
                                     <div class="stat-number">300+</div>
-                                    <div class="stat-label">Estilos disponibles</div>
+                                    <div class="stat-label">Productos</div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Right Image -->
+                <!-- Imagen derecha -->
                 <div class="col-lg-6">
                     <div class="hero-image-wrapper">
-                        <!-- ============================
-                         🖼️ IMAGE — Imagen principal del banner
-                         Para cambiar: reemplaza la URL del src/th:src
-                         Tamaño recomendado: 800x600px, fondo transparente PNG
-                         ============================ -->
-
-                        <!-- tu imagen del zapato aquí -->
+                        <!-- ── Imagen principal del banner ──────────────────── -->
                         <div class="hero-image-bg" th:href="@{/}">
-                            <img th:src="@{/images/imagenProductoPrincipal.png}" alt="producto" />
+                                    <img th:src="@{/images/imagenProductoPrincipal.png}" alt="producto" />
                         </div>
-
-                        <!-- Floating: Free Shipping -->
+                        
+                        <!-- Insignia flotante: Envío gratis -->
                         <div class="floating-badge badge-shipping">
                             <span class="badge-icon icon-green"><i class="bi bi-check-lg"></i></span>
                             <div class="floating-badge-text">
-                                <strong>Envío gratis</strong>
-                                <small>Pedidos superiores a $60,000</small>
+                                <strong>Envío Gratis</strong>
+                                <small>Pedidos +$75</small>
                             </div>
                         </div>
 
-                        <!-- Floating: Easy Returns -->
+                        <!-- Insignia flotante: Devoluciones fáciles -->
                         <div class="floating-badge badge-returns">
                             <span class="badge-icon icon-accent"><i class="bi bi-arrow-repeat"></i></span>
                             <div class="floating-badge-text">
-                                <strong>Devoluciones fáciles</strong>
-                                <small>Garantía de 60 días</small>
+                                <strong>Devoluciones</strong>
+                                <small>Garantía 60 días</small>
                             </div>
                         </div>
 
-                        <!-- Discount Circle -->
+                        <!-- Círculo de descuento -->
                         <div class="discount-circle">
                             <span class="up-to">HASTA</span>
                             <span class="percent">40%</span>
-                            <span class="off">DE DESCUENTO</span>
+                            <span class="off">OFF</span>
                         </div>
 
+                        </section>
+
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 
-
-    </div>
-    </div>
-    </div>
-    </div>
-    </section>
-
-
-
-    <!-- ============================================================
-     SHOP BY CATEGORY
-     ============================================================ -->
+    <!-- ── Comprar por categoría ────────────────────────── -->
     <section id="categories" class="categories-section fade-in-section">
         <div class="container">
             <div class="section-header">
@@ -126,406 +112,155 @@
                     <h2 class="section-title">Compra por categoría</h2>
                     <p class="section-subtitle">Todo lo que un verdadero fan necesita, en un solo lugar</p>
                 </div>
-                <a th:href="@{/catalog}" href="catalog.html" class="section-link">
+                <a th:href="@{/catalogo}" href="catalog.html" class="section-link">
                     Ver Todo<i class="bi bi-chevron-right"></i>
                 </a>
             </div>
 
-            <!-- ============================
-             🖼️ CATEGORY IMAGES — Imágenes de categorías
-             Para cambiar: reemplaza la URL del src
-             Tamaño recomendado: 600x400px
-             ============================ -->
-
+            <!-- ── Tarjetas de categoría dinámicas ──────────────── -->
             <section class="stride-hero">
-
-                <div class="row g-4">
-                    <!-- Running -->
-                    <div class="col-lg-4 col-md-6">
-                        <a th:href="@{/catalog}" href="catalog.html" class="text-decoration-none">
-                            <div class="category-card">
-                                <img src="https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=600&q=80"
-                                    alt="Running shoes category" />
-                                <div class="category-overlay">
-                                    <span class="category-count">5 Productos</span>
-                                    <h3 class="category-name">Camisas</h3>
-                                    <p class="category-desc">Expresa tu lado friki con estilo</p>
-                                    <span class="category-link">Compra ahora <i class="bi bi-arrow-right"></i></span>
-                                </div>
+            <div class="row g-4">
+                <!-- 1. Accesorios -->
+                <div class="col-lg-4 col-md-6">
+                    <a th:href="@{/catalogo(categoria='Accesorio')}" class="text-decoration-none">
+                        <div class="category-card">
+                            <img src="https://placehold.co/600x600/2a2a2a/f9f9f9?text=Accesorios" alt="Accesorios">
+                            <div class="category-overlay">
+                                <h3 class="category-name">Accesorios</h3>
+                                <p class="category-desc">Joyas, llaveros y pines geek</p>
+                                <span class="category-link">Compra ahora <i class="bi bi-arrow-right"></i></span>
                             </div>
-                        </a>
-                    </div>
-                    <!-- Sneakers -->
-                    <div class="col-lg-4 col-md-6">
-                        <a th:href="@{/catalog}" href="catalog.html" class="text-decoration-none">
-                            <div class="category-card">
-                                <img src="https://images.unsplash.com/photo-1600269452121-4f2416e55c28?w=600&q=80"
-                                    alt="Sneakers category" />
-                                <div class="category-overlay">
-                                    <span class="category-count">6 productos</span>
-                                    <h3 class="category-name">Peluches</h3>
-                                    <p class="category-desc">Tus personajes favoritos, versión abrazable 🧸</p>
-                                    <span class="category-link">Compra ahora <i class="bi bi-arrow-right"></i></span>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <!-- Basketball -->
-                    <div class="col-lg-4 col-md-6">
-                        <a th:href="@{/catalog}" href="catalog.html" class="text-decoration-none">
-                            <div class="category-card">
-                                <img src="https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=600&q=80"
-                                    alt="Basketball shoes category" />
-                                <div class="category-overlay">
-                                    <span class="category-count">5 productos</span>
-                                    <h3 class="category-name">Figuras coleccionables</h3>
-                                    <p class="category-desc">Detalles que todo fan sabrá apreciar</p>
-                                    <span class="category-link">Compra ahora <i class="bi bi-arrow-right"></i></span>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <!-- Casual -->
-                    <div class="col-lg-4 col-md-6">
-                        <a th:href="@{/catalog}" href="catalog.html" class="text-decoration-none">
-                            <div class="category-card">
-                                <img src="https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=600&q=80"
-                                    alt="Casual shoes category" />
-                                <div class="category-overlay">
-                                    <span class="category-count">4 productos</span>
-                                    <h3 class="category-name">Cómics</h3>
-                                    <p class="category-desc">Cada página es una nueva aventura</p>
-                                    <span class="category-link">Compra ahora <i class="bi bi-arrow-right"></i></span>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <!-- Boots -->
-                    <div class="col-lg-4 col-md-6">
-                        <a th:href="@{/catalog}" href="catalog.html" class="text-decoration-none">
-                            <div class="category-card">
-                                <img src="https://images.unsplash.com/photo-1638247025967-b4e38f787b76?w=600&q=80"
-                                    alt="Boots category" />
-                                <div class="category-overlay">
-                                    <span class="category-count">6 productos</span>
-                                    <h3 class="category-name">Accesorios</h3>
-                                    <p class="category-desc">Los detalles que hacen único tu estilo</p>
-                                    <span class="category-link">Compra ahora <i class="bi bi-arrow-right"></i></span>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <!-- Sandals -->
-                    <div class="col-lg-4 col-md-6">
-                        <a th:href="@{/catalog}" href="catalog.html" class="text-decoration-none">
-                            <div class="category-card">
-                                <img src="https://images.unsplash.com/photo-1603487742131-4160ec999306?w=600&q=80"
-                                    alt="Sandals category" />
-                                <div class="category-overlay">
-                                    <span class="category-count">4 productos</span>
-                                    <h3 class="category-name">Mochilas</h3>
-                                    <p class="category-desc">Lleva tu mundo a todas partes</p>
-                                    <span class="category-link">Compra ahora <i class="bi bi-arrow-right"></i></span>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
+                        </div>
+                    </a>
                 </div>
+
+                <!-- 2. Mochilas -->
+                <div class="col-lg-4 col-md-6">
+                    <a th:href="@{/catalogo(categoria='Mochila')}" class="text-decoration-none">
+                        <div class="category-card">
+                            <img src="https://placehold.co/600x600/2a2a2a/f9f9f9?text=Mochilas" alt="Mochilas">
+                            <div class="category-overlay">
+                                <h3 class="category-name">Mochilas</h3>
+                                <p class="category-desc">Estilo anime para tu día a día</p>
+                                <span class="category-link">Compra ahora <i class="bi bi-arrow-right"></i></span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- 3. Cómics y Manga -->
+                <div class="col-lg-4 col-md-6">
+                    <a th:href="@{/catalogo(categoria='Comic')}" class="text-decoration-none">
+                        <div class="category-card">
+                            <img src="https://placehold.co/600x600/2a2a2a/f9f9f9?text=Comics" alt="Comics">
+                            <div class="category-overlay">
+                                <h3 class="category-name">Cómics y Manga</h3>
+                                <p class="category-desc">Las mejores historias y ediciones</p>
+                                <span class="category-link">Compra ahora <i class="bi bi-arrow-right"></i></span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- 4. Camisas -->
+                <div class="col-lg-4 col-md-6">
+                    <a th:href="@{/catalogo(categoria='Camisa')}" class="text-decoration-none">
+                        <div class="category-card">
+                            <img src="https://placehold.co/600x600/2a2a2a/f9f9f9?text=Camisas" alt="Camisas">
+                            <div class="category-overlay">
+                                <h3 class="category-name">Camisas</h3>
+                                <p class="category-desc">Viste tu pasión con estilo</p>
+                                <span class="category-link">Compra ahora <i class="bi bi-arrow-right"></i></span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- 5. Figuras -->
+                <div class="col-lg-4 col-md-6">
+                    <a th:href="@{/catalogo(categoria='FiguraColeccionable')}" class="text-decoration-none">
+                        <div class="category-card">
+                            <img src="https://placehold.co/600x600/2a2a2a/f9f9f9?text=Figuras" alt="Figuras">
+                            <div class="category-overlay">
+                                <h3 class="category-name">Figuras</h3>
+                                <p class="category-desc">Coleccionables de alta calidad</p>
+                                <span class="category-link">Compra ahora <i class="bi bi-arrow-right"></i></span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- 6. Peluches -->
+                <div class="col-lg-4 col-md-6">
+                    <a th:href="@{/catalogo(categoria='Peluche')}" class="text-decoration-none">
+                        <div class="category-card">
+                            <img src="https://placehold.co/600x600/2a2a2a/f9f9f9?text=Peluches" alt="Peluches">
+                            <div class="category-overlay">
+                                <h3 class="category-name">Peluches</h3>
+                                <p class="category-desc">Tus personajes favoritos más suaves</p>
+                                <span class="category-link">Compra ahora <i class="bi bi-arrow-right"></i></span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
         </div>
     </section>
 
-
-    <!-- ============================================================
-     FEATURED COLLECTION
-     ============================================================ -->
+    <!-- ── Colección destacada ──────────────────────────── -->
     <section id="featured" class="featured-section fade-in-section">
         <div class="container">
             <div class="section-header">
                 <div>
-                    <h2 class="section-title">Colección destacada</h2>
-                    <p class="section-subtitle">Lo más épico de nuestra colección, listo para ti</p>
+                    <h2 class="section-title">Productos Destacados</h2>
+                    <p class="section-subtitle">Nuestros productos más populares seleccionados para ti</p>
                 </div>
-                <a th:href="@{/catalog}" href="catalog.html" class="section-link">
-                    Ver todo lo destacado<i class="bi bi-chevron-right"></i>
+                <a th:href="@{/catalogo}" href="catalog.html" class="section-link">
+                    Ver Todos <i class="bi bi-chevron-right"></i>
                 </a>
             </div>
 
-            <!-- ============================
-             🖼️ PRODUCT IMAGES — Imágenes de productos
-             Para cambiar: reemplaza la URL del src
-             Tamaño recomendado: 500x500px
-             ============================ -->
+            <!-- ── Tarjetas de productos destacados (dinámicas) ── -->
             <div class="row g-4">
-
-                <!-- Product 1: Velocity Runner Pro -->
-                <div class="col-xl-3 col-lg-4 col-md-6">
+                <div class="col-xl-3 col-lg-4 col-md-6" th:each="p : ${productosDestacados}">
                     <div class="product-card">
                         <div class="product-image-wrapper">
-                            <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&q=80"
-                                alt="Velocity Runner Pro" loading="lazy" />
+                            <a th:href="@{/producto/{id}(id=${p.id})}">
+                                <img th:src="${p.imagen}" th:alt="${p.nombre}" loading="lazy" />
+                            </a>
                             <div class="product-badges">
-                                <span class="badge-discount">-18%</span>
-                                <span class="badge-bestseller">ÉXITO DE VENTA</span>
+                                <span class="badge-new" th:if="${stockMap[p.id] != null and stockMap[p.id] > 0}">DISPONIBLE</span>
                             </div>
-                            <button class="btn-add-to-cart" aria-label="Add to cart">
-                                <i class="bi bi-cart-plus"></i> Añadir al carrito
-                            </button>
+                            <form th:action="@{/carrito/añadir}" method="post" style="display:inline;">
+                                <input type="hidden" name="productoId" th:value="${p.id}" />
+                                <button type="submit" class="btn-add-to-cart" aria-label="Agregar al carrito">
+                                    <i class="bi bi-cart-plus"></i> Agregar
+                                </button>
+                            </form>
                         </div>
                         <div class="product-info">
                             <div class="product-meta">
-                                <span class="product-category">Running</span>
-                                <span class="product-rating"><i class="bi bi-star-fill"></i> 4.9</span>
+                                <span class="product-category" th:text="${p.getClass().getSimpleName()}">Categoría</span>
                             </div>
-                            <h4 class="product-name">Velocity Runner Pro</h4>
+                            <h4 class="product-name">
+                                <a th:href="@{/producto/{id}(id=${p.id})}" class="text-decoration-none" th:text="${p.nombre}">Producto</a>
+                            </h4>
                             <div class="product-price">
-                                <span class="current-price">$179</span>
-                                <span class="original-price">$219</span>
+                                <span class="current-price" th:text="${@precioUtils.formatearCOP(p.precio)}">$0.00</span>
                             </div>
-                            <div class="product-colors">
-                                <span class="color-dot active" style="background:#e53935;" title="Infrared"></span>
-                                <span class="color-dot" style="background:#212121;" title="Black"></span>
-                                <span class="color-dot" style="background:#1565c0;" title="Royal Blue"></span>
-                            </div>
-                            <p class="product-sizes">12 sizes available</p>
                         </div>
                     </div>
                 </div>
-
-                <!-- Product 2: Streetwise Classic -->
-                <div class="col-xl-3 col-lg-4 col-md-6">
-                    <div class="product-card">
-                        <div class="product-image-wrapper">
-                            <img src="https://images.unsplash.com/photo-1600269452121-4f2416e55c28?w=500&q=80"
-                                alt="Streetwise Classic" />
-                            <div class="product-badges">
-                                <span class="badge-bestseller">BESTSELLER</span>
-                            </div>
-                            <button class="btn-add-to-cart" aria-label="Add to cart">
-                                <i class="bi bi-cart-plus"></i> Añadir al carrito
-                            </button>
-                        </div>
-                        <div class="product-info">
-                            <div class="product-meta">
-                                <span class="product-category">Sneakers</span>
-                                <span class="product-rating"><i class="bi bi-star-fill"></i> 4.8</span>
-                            </div>
-                            <h4 class="product-name">Streetwise Classic</h4>
-                            <div class="product-price">
-                                <span class="current-price">$129</span>
-                            </div>
-                            <div class="product-colors">
-                                <span class="color-dot" style="background:#e0e0e0;" title="White"></span>
-                                <span class="color-dot active" style="background:#212121;" title="Black"></span>
-                                <span class="color-dot" style="background:#90caf9;" title="Light Blue"></span>
-                                <span class="color-dot" style="background:#66bb6a;" title="Green"></span>
-                            </div>
-                            <p class="product-sizes">12 sizes available</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Product 3: Court Dominator X -->
-                <div class="col-xl-3 col-lg-4 col-md-6">
-                    <div class="product-card">
-                        <div class="product-image-wrapper">
-                            <img src="https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=500&q=80"
-                                alt="Court Dominator X" />
-                            <div class="product-badges">
-                                <span class="badge-new">NEW</span>
-                            </div>
-                            <button class="btn-add-to-cart" aria-label="Add to cart">
-                                <i class="bi bi-cart-plus"></i> Añadir al carrito
-                            </button>
-                        </div>
-                        <div class="product-info">
-                            <div class="product-meta">
-                                <span class="product-category">Basketball</span>
-                                <span class="product-rating"><i class="bi bi-star-fill"></i> 4.7</span>
-                            </div>
-                            <h4 class="product-name">Court Dominator X</h4>
-                            <div class="product-price">
-                                <span class="current-price">$199</span>
-                            </div>
-                            <div class="product-colors">
-                                <span class="color-dot" style="background:#e0e0e0;" title="White"></span>
-                                <span class="color-dot active" style="background:#212121;" title="Black"></span>
-                                <span class="color-dot" style="background:#1565c0;" title="Blue"></span>
-                            </div>
-                            <p class="product-sizes">11 sizes available</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Product 4: Trail Blazer GTX -->
-                <div class="col-xl-3 col-lg-4 col-md-6">
-                    <div class="product-card">
-                        <div class="product-image-wrapper">
-                            <img src="https://images.unsplash.com/photo-1638247025967-b4e38f787b76?w=500&q=80"
-                                alt="Trail Blazer GTX" />
-                            <div class="product-badges">
-                                <span class="badge-discount">-17%</span>
-                            </div>
-                            <button class="btn-add-to-cart" aria-label="Add to cart">
-                                <i class="bi bi-cart-plus"></i> Añadir al carrito
-                            </button>
-                        </div>
-                        <div class="product-info">
-                            <div class="product-meta">
-                                <span class="product-category">Boots</span>
-                                <span class="product-rating"><i class="bi bi-star-fill"></i> 4.8</span>
-                            </div>
-                            <h4 class="product-name">Trail Blazer GTX</h4>
-                            <div class="product-price">
-                                <span class="current-price">$189</span>
-                                <span class="original-price">$229</span>
-                            </div>
-                            <div class="product-colors">
-                                <span class="color-dot active" style="background:#8d6e63;" title="Brown"></span>
-                                <span class="color-dot" style="background:#212121;" title="Black"></span>
-                                <span class="color-dot" style="background:#9e9e9e;" title="Gray"></span>
-                            </div>
-                            <p class="product-sizes">12 sizes available</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Product 5: Urban Flex -->
-                <div class="col-xl-3 col-lg-4 col-md-6">
-                    <div class="product-card">
-                        <div class="product-image-wrapper">
-                            <img src="https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=500&q=80"
-                                alt="Urban Flex" />
-                            <div class="product-badges">
-                                <span class="badge-new">NEW</span>
-                            </div>
-                            <button class="btn-add-to-cart" aria-label="Add to cart">
-                                <i class="bi bi-cart-plus"></i> Añadir al carrito
-                            </button>
-                        </div>
-                        <div class="product-info">
-                            <div class="product-meta">
-                                <span class="product-category">Casual</span>
-                                <span class="product-rating"><i class="bi bi-star-fill"></i> 4.6</span>
-                            </div>
-                            <h4 class="product-name">Urban Flex</h4>
-                            <div class="product-price">
-                                <span class="current-price">$149</span>
-                            </div>
-                            <div class="product-colors">
-                                <span class="color-dot active" style="background:#c8e6c9;" title="Mint"></span>
-                                <span class="color-dot" style="background:#212121;" title="Black"></span>
-                            </div>
-                            <p class="product-sizes">10 sizes available</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Product 6: Momentum Elite -->
-                <div class="col-xl-3 col-lg-4 col-md-6">
-                    <div class="product-card">
-                        <div class="product-image-wrapper">
-                            <img src="https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=500&q=80"
-                                alt="Momentum Elite" />
-                            <div class="product-badges">
-                                <span class="badge-new">NEW</span>
-                            </div>
-                            <button class="btn-add-to-cart" aria-label="Add to cart">
-                                <i class="bi bi-cart-plus"></i> Añadir al carrito
-                            </button>
-                        </div>
-                        <div class="product-info">
-                            <div class="product-meta">
-                                <span class="product-category">Running</span>
-                                <span class="product-rating"><i class="bi bi-star-fill"></i> 4.9</span>
-                            </div>
-                            <h4 class="product-name">Momentum Elite</h4>
-                            <div class="product-price">
-                                <span class="current-price">$209</span>
-                            </div>
-                            <div class="product-colors">
-                                <span class="color-dot active" style="background:#e0e0e0;" title="White"></span>
-                                <span class="color-dot" style="background:#ff7043;" title="Coral"></span>
-                            </div>
-                            <p class="product-sizes">14 sizes available</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Product 7: Classic Canvas -->
-                <div class="col-xl-3 col-lg-4 col-md-6">
-                    <div class="product-card">
-                        <div class="product-image-wrapper">
-                            <img src="https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=500&q=80"
-                                alt="Classic Canvas" />
-                            <div class="product-badges">
-                            </div>
-                            <button class="btn-add-to-cart" aria-label="Add to cart">
-                                <i class="bi bi-cart-plus"></i> Añadir al carrito
-                            </button>
-                        </div>
-                        <div class="product-info">
-                            <div class="product-meta">
-                                <span class="product-category">Casual</span>
-                                <span class="product-rating"><i class="bi bi-star-fill"></i> 4.5</span>
-                            </div>
-                            <h4 class="product-name">Classic Canvas</h4>
-                            <div class="product-price">
-                                <span class="current-price">$89</span>
-                            </div>
-                            <div class="product-colors">
-                                <span class="color-dot active" style="background:#f44336;" title="Red"></span>
-                                <span class="color-dot" style="background:#1565c0;" title="Navy"></span>
-                                <span class="color-dot" style="background:#e0e0e0;" title="White"></span>
-                            </div>
-                            <p class="product-sizes">8 sizes available</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Product 8: Summit Hiker -->
-                <div class="col-xl-3 col-lg-4 col-md-6">
-                    <div class="product-card">
-                        <div class="product-image-wrapper">
-                            <img src="https://images.unsplash.com/photo-1520256862855-398228c41684?w=500&q=80"
-                                alt="Summit Hiker" />
-                            <div class="product-badges">
-                                <span class="badge-discount">-22%</span>
-                            </div>
-                            <button class="btn-add-to-cart" aria-label="Add to cart">
-                                <i class="bi bi-cart-plus"></i> Añadir al carrito
-                            </button>
-                        </div>
-                        <div class="product-info">
-                            <div class="product-meta">
-                                <span class="product-category">Boots</span>
-                                <span class="product-rating"><i class="bi bi-star-fill"></i> 4.7</span>
-                            </div>
-                            <h4 class="product-name">Summit Hiker</h4>
-                            <div class="product-price">
-                                <span class="current-price">$159</span>
-                                <span class="original-price">$205</span>
-                            </div>
-                            <div class="product-colors">
-                                <span class="color-dot active" style="background:#5d4037;" title="Dark Brown"></span>
-                                <span class="color-dot" style="background:#455a64;" title="Charcoal"></span>
-                            </div>
-                            <p class="product-sizes">10 sizes available</p>
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </div>
     </section>
 
-    <!-- ============================================================
-     FEATURES / BENEFITS BAR
-     ============================================================ -->
+    <!-- ── Barra de características / beneficios ────────── -->
     <section class="features-bar-section fade-in-section">
         <div class="container">
             <div class="features-bar-inner">
                 <div class="row g-4 align-items-center">
-                    <!-- Free Shipping -->
+                    <!-- Envío gratis -->
                     <div class="col-lg-3 col-md-6">
                         <div class="feature-item">
                             <div class="feature-icon">
@@ -533,38 +268,35 @@
                             </div>
                             <div class="feature-content">
                                 <h4 class="feature-title">Envío Gratis</h4>
-                                <p class="feature-text">Envío estándar gratuito en todos los pedidos superiores
-                                    a las opciones Express de $60,000 disponibles.</p>
+                                <p class="feature-text">Envío estándar gratis en pedidos mayores a $75.</p>
                             </div>
                         </div>
                     </div>
-                    <!-- 60-Day Returns -->
+                    <!-- Devoluciones de 60 días -->
                     <div class="col-lg-3 col-md-6">
                         <div class="feature-item">
                             <div class="feature-icon">
                                 <i class="bi bi-arrow-repeat"></i>
                             </div>
                             <div class="feature-content">
-                                <h4 class="feature-title">60 Días de Retorno</h4>
-                                <p class="feature-text">Cambiaste de opinión? Devuelve los artículos
-                                    sin usar en un plazo de 60 días, sin hacer preguntas.</p>
+                                <h4 class="feature-title">Devoluciones 60 Días</h4>
+                                <p class="feature-text">¿Cambiaste de opinión? Devuelve sin preguntas en 60 días.</p>
                             </div>
                         </div>
                     </div>
-                    <!-- Size Guarantee -->
+                    <!-- Garantía -->
                     <div class="col-lg-3 col-md-6">
                         <div class="feature-item">
                             <div class="feature-icon">
-                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-rulers"></i>
                             </div>
                             <div class="feature-content">
-                                <h4 class="feature-title">Productos Originales</h4>
-                                <p class="feature-text">Artículos auténticos del mundo geek, 
-                                    seleccionados para verdaderos fans.</p>
+                                <h4 class="feature-title">Calidad Garantizada</h4>
+                                <p class="feature-text">Todos nuestros productos pasan control de calidad.</p>
                             </div>
                         </div>
                     </div>
-                    <!-- Secure Checkout -->
+                    <!-- Pago seguro -->
                     <div class="col-lg-3 col-md-6">
                         <div class="feature-item">
                             <div class="feature-icon">
@@ -572,8 +304,7 @@
                             </div>
                             <div class="feature-content">
                                 <h4 class="feature-title">Pago Seguro</h4>
-                                <p class="feature-text">Su información de pago está encriptada y segura.
-                                    Compre con confianza.</p>
+                                <p class="feature-text">Tu información de pago está encriptada y segura.</p>
                             </div>
                         </div>
                     </div>
@@ -582,11 +313,7 @@
         </div>
     </section>
 
-
-
-    <!-- ============================================================
-     CTA / NEWSLETTER
-     ============================================================ -->
+    <!-- ── CTA / Boletín ────────────────────────────────── -->
     <section id="cta" class="cta-section fade-in-section">
         <div class="container">
             <h2 class="cta-title">¿Eres de los nuestros?</h2>
@@ -596,27 +323,20 @@
             </p>
 
             <form class="cta-form" th:action="@{/newsletter}" action="#" method="post">
-                <input type="email" class="cta-input" placeholder="Ingrese su correo" required
-                    aria-label="Email address" />
+                <input type="email" class="cta-input" placeholder="Ingresa tu email" required
+                    aria-label="Correo electrónico" />
                 <button type="submit" class="cta-btn">Quiero mi 15% Off</button>
             </form>
 
             <p class="cta-disclaimer">Sin spam, jamás. Cancela cuando quieras.</p>
-
         </div>
     </section>
 
-
-    <!-- ========== JOIN CLUB BAR ========== -->
+    <!-- ── Barra de unirse al club ──────────────────────── -->
     <div th:replace="~{fragments/footer :: joinclub}"></div>
 
-
-    <!-- ========== FOOTER ========== -->
+    <!-- ── Pie de página ────────────────────────────────── -->
     <div th:replace="~{fragments/footer :: footer}"></div>
-
-
-    <!-- ========== QUICK VIEW MODAL ========== -->
-    <div th:replace="~{fragments/previsualizacion :: previsualizacion}"></div>
 
     <!-- Scripts -->
     <div th:replace="~{fragments/scripts :: scripts}"></div>

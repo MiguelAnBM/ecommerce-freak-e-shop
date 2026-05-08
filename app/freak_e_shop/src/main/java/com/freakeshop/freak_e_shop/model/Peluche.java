@@ -5,7 +5,8 @@ public class Peluche extends Producto {
     private String material;
     private String tamano;
 
-    public Peluche(String id, String nombre, String descripcion, double precio, String imagen, String material, String tamano) {
+    public Peluche(String id, String nombre, String descripcion, double precio, String imagen, String material,
+            String tamano) {
         super(id, nombre, descripcion, precio, imagen);
         this.material = material;
         this.tamano = tamano;

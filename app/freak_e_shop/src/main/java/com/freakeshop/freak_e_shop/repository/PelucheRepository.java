@@ -1,67 +1,104 @@
 package com.freakeshop.freak_e_shop.repository;
 
+import com.freakeshop.freak_e_shop.DataDirectoryResolver;
 import com.freakeshop.freak_e_shop.model.Peluche;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import org.springframework.stereotype.Repository;
 
+import jakarta.annotation.PostConstruct;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.*;
+import java.util.*;
+
+@Repository
 public class PelucheRepository {
 
-    private final String RUTA_ARCHIVO = "peluches.txt";
+    private final DataDirectoryResolver dataResolver;
+    private String rutaArchivo;
+
+    public PelucheRepository(DataDirectoryResolver dataResolver) {
+        this.dataResolver = dataResolver;
+    }
+
+    @PostConstruct
+    public void init() {
+        this.rutaArchivo = Paths.get(dataResolver.getPath(), "peluches.txt").toString();
+    }
 
     public void guardar(Peluche peluche) {
-        
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(RUTA_ARCHIVO, true))) {
-            
-            String linea = peluche.getId() + ";" + 
-                           peluche.getNombre() + ";" + 
-                           peluche.getDescripcion() + ";" + 
-                           peluche.getPrecio() + ";" + 
-                           peluche.getImagen() + ";" + 
-                           peluche.getMaterial() + ";" + 
-                           peluche.getTamano();
-            
+        try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(rutaArchivo, true), StandardCharsets.UTF_8))) {
+            String linea = peluche.getId() + ";" +
+                           peluche.getNombre() + ";" +
+                           peluche.getDescripcion() + ";" +
+                           peluche.getPrecio() + ";" +
+                           peluche.getImagen() + ";" +
+                           peluche.getMaterial() + ";" +
+                           peluche.getTamano() + ";" +
+                           peluche.isDestacado();
             bw.write(linea);
             bw.newLine();
-            
         } catch (IOException e) {
-            System.out.println("Error al guardar el peluche: " + e.getMessage());
+            System.out.println("Error al guardar peluche: " + e.getMessage());
         }
     }
 
     public List<Peluche> obtenerTodos() {
-        List<Peluche> listaPeluches = new ArrayList<>();
-        
-        try (BufferedReader br = new BufferedReader(new FileReader(RUTA_ARCHIVO))) {
+        List<Peluche> lista = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(rutaArchivo), StandardCharsets.UTF_8))) {
             String linea;
-            
             while ((linea = br.readLine()) != null) {
-
                 String[] datos = linea.split(";");
-                
-                if (datos.length == 7) {
-
+                if (datos.length >= 7) {
                     Peluche p = new Peluche(
-                        datos[0],               
-                        datos[1],                
-                        datos[2],                
-                        Double.parseDouble(datos[3]), 
-                        datos[4],                
-                        datos[5],               
-                        datos[6]                
+                        datos[0], datos[1], datos[2],
+                        Double.parseDouble(datos[3]),
+                        datos[4], datos[5], datos[6]
                     );
-                    listaPeluches.add(p);
+                    if (datos.length > 7) p.setDestacado(Boolean.parseBoolean(datos[7]));
+                    lista.add(p);
                 }
             }
         } catch (IOException e) {
-
-            System.out.println("No se encontró el archivo o está vacío. Se creará uno nuevo al guardar.");
+            // Archivo no encontrado — se creará al guardar
         }
-        
-        return listaPeluches;
+        return lista;
+    }
+
+    public Peluche buscarPorId(String id) {
+        return obtenerTodos().stream()
+                .filter(p -> p.getId().equals(id))
+                .findFirst().orElse(null);
+    }
+
+    public void eliminar(String id) {
+        List<Peluche> lista = obtenerTodos();
+        lista.removeIf(p -> p.getId().equals(id));
+        reescribir(lista);
+    }
+
+    private void reescribir(List<Peluche> lista) {
+        try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(rutaArchivo), StandardCharsets.UTF_8))) {
+            for (Peluche p : lista) {
+                String linea = p.getId() + ";" + p.getNombre() + ";" +
+                               p.getDescripcion() + ";" + p.getPrecio() + ";" +
+                               p.getImagen() + ";" + p.getMaterial() + ";" +
+                               p.getTamano() + ";" + p.isDestacado();
+                bw.write(linea);
+                bw.newLine();
+            }
+        } catch (IOException e) {
+            System.out.println("Error al reescribir peluches: " + e.getMessage());
+        }
+    }
+
+    public void actualizar(Peluche peluche) {
+        List<Peluche> lista = obtenerTodos();
+        for (int i = 0; i < lista.size(); i++) {
+            if (lista.get(i).getId().equals(peluche.getId())) {
+                lista.set(i, peluche);
+                break;
+            }
+        }
+        reescribir(lista);
     }
 }

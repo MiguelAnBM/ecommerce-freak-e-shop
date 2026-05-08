@@ -1,32 +1,28 @@
-<!-- ============================================
-     STRIDE — Footer Fragment
-     Compatible with Spring Boot + Thymeleaf
-     ============================================ -->
+<!-- ── Fragmento Pie de página ────────────────────── -->
 
 <section th:fragment="joinclub" class="join-club-bar">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-6 mb-3 mb-lg-0">
-                <h3 class="join-title">Únete al freak-E Club</h3>
-                <p class="join-desc mb-0">Ahorra 15% en tu primer pedido y descubre antes que nadie lo nuevo.</p>
+                <h3 class="join-title">Join the Stride Club</h3>
+                <p class="join-desc mb-0">Get 15% off your first order, plus early access to new drops.</p>
             </div>
             <div class="col-lg-6 d-flex justify-content-lg-end">
                 <div class="input-group">
-                    <input type="email" class="form-control" placeholder="Ingrese su correo"
-                        aria-label="Correo electrónico para el boletín" />
-                    <button class="btn btn-subscribe" type="button">Suscribirse
-</button>
+                    <input type="email" class="form-control" placeholder="Enter your email"
+                        aria-label="Email for newsletter" />
+                    <button class="btn btn-subscribe" type="button">Subscribe</button>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- ========== FOOTER ========== -->
+<!-- ── Pie de página ────────────────────────────────── -->
 <footer th:fragment="footer" class="stride-footer">
     <div class="container">
         <div class="row g-4">
-            <!-- Brand Column -->
+            <!-- Columna de marca -->
             <div class="col-lg-3 col-md-6">
                 <div class="footer-brand">
                     <a class="navbar-brand" th:href="@{/}">
@@ -34,9 +30,8 @@
 
                     </a>
                 </div>
-                <p class="footer-desc">
-                    Descubre figuras, accesorios y piezas únicas inspiradas en tus universos favoritos,
-                    creadas para brillar en cada detalle.</p>
+                <p class="footer-desc">Premium footwear for every step of your journey. From athletic performance to
+                    everyday comfort.</p>
                 <div class="social-icons">
                     <a href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
                     <a href="#" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
@@ -46,58 +41,61 @@
                 </div>
             </div>
 
-            <!-- Shop Links -->
+            <!-- Enlaces de tienda -->
             <div class="col-lg-3 col-md-6">
                 <h5 class="footer-heading">Tienda</h5>
                 <ul class="footer-links">
-                    <li><a th:href="@{/categories/running}">Camisas</a></li>
-                    <li><a th:href="@{/categories/sneakers}">Peluches</a></li>
-                    <li><a th:href="@{/categories/basketball}">Figuras coleccionables</a></li>
-                    <li><a th:href="@{/categories/casual}">Cómics</a></li>
-                    <li><a th:href="@{/categories/boots}">Accesorios</a></li>
-                    <li><a th:href="@{/categories/sandals}">Mochilas</a></li>
+                    <li><a th:href="@{/catalogo(categoria='Accesorio')}">Accesorios</a></li>
+                    <li><a th:href="@{/catalogo(categoria='Mochila')}">Mochilas</a></li>
+                    <li><a th:href="@{/catalogo(categoria='Comic')}">Cómics</a></li>
+                    <li><a th:href="@{/catalogo(categoria='Camisa')}">Camisas</a></li>
+                    <li><a th:href="@{/catalogo(categoria='FiguraColeccionable')}">Figuras Coleccionables</a></li>
+                    <li><a th:href="@{/catalogo(categoria='Peluche')}">Peluches</a></li>
                 </ul>
             </div>
 
-            <!-- Help Links -->
+            <!-- Enlaces de ayuda -->
             <div class="col-lg-3 col-md-6">
-                <h5 class="footer-heading">Ayuda</h5>
+                <h5 class="footer-heading">Help</h5>
                 <ul class="footer-links">
                     <li><a th:href="@{/faq}">FAQ</a></li>
-                    <li><a th:href="@{/shipping}">Devolución &amp; </a></li>
-                    <li><a th:href="@{/contact}">Contáctanos</a></li>
-                    <li><a th:href="@{/track-order}">Seguimiento de pedido</a></li>
+                    <li><a th:href="@{/shipping}">Shipping &amp; Returns</a></li>
+                    <li><a th:href="@{/size-guide}">Size Guide</a></li>
+                    <li><a th:href="@{/contact}">Contact Us</a></li>
+                    <li><a th:href="@{/track-order}">Track Order</a></li>
                 </ul>
             </div>
 
-            <!-- About Links -->
+            <!-- Enlaces de información -->
             <div class="col-lg-3 col-md-6">
-                <h5 class="footer-heading">Sobre</h5>
+                <h5 class="footer-heading">About</h5>
                 <ul class="footer-links">
-                    <li><a th:href="@{/about}">Nuestra historia</a></li>
-                    <li><a th:href="@{/sustainability}">Sostenibilidad</a></li>
-                    <li><a th:href="@{/stores}">Localizar tiendas</a></li>
+                    <li><a th:href="@{/about}">Our Story</a></li>
+                    <li><a th:href="@{/sustainability}">Sustainability</a></li>
+                    <li><a th:href="@{/athletes}">Athletes</a></li>
+                    <li><a th:href="@{/careers}">Careers</a></li>
+                    <li><a th:href="@{/stores}">Store Locator</a></li>
                 </ul>
             </div>
         </div>
 
-        <!-- Footer Bottom -->
+        <!-- Parte inferior del pie de página -->
         <div class="footer-bottom">
             <div class="row align-items-center">
                 <div class="col-md-5">
-                    <p class="footer-bottom-text mb-0">&copy; 2026 Freak-E. Todos los derechos reservados.</p>
+                    <p class="footer-bottom-text mb-0">&copy; 2026 Stride. All rights reserved.</p>
                 </div>
                 <div class="col-md-7">
                     <div class="footer-bottom-links">
-                        <a th:href="@{/privacy}">Privacidad</a>
-                        <a th:href="@{/terms}">Términos</a>
+                        <a th:href="@{/privacy}">Privacy</a>
+                        <a th:href="@{/terms}">Terms</a>
                         <div class="payment-icons">
                             <span class="payment-icon">VISA</span>
                             <span class="payment-icon" style="background:#eb001b;border-color:#eb001b;">
                                 <i class="bi bi-circle-fill" style="font-size:0.5rem;color:#fff;"></i>
                             </span>
                             <span class="payment-icon" style="background:#006fcf;border-color:#006fcf;">AMEX</span>
-                            <span class="payment-icon">Pago</span>
+                            <span class="payment-icon">Pay</span>
                         </div>
                     </div>
                 </div>

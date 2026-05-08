@@ -7,11 +7,11 @@ public class Mochila extends Producto {
     private boolean tieneCompartimentoPC;
 
     // Constructor
-    public Mochila(String id, String nombre, String descripcion, double precio, String imagen, 
-                   String tamano, String materialFabricacion, boolean tieneCompartimentoPC) {
-        
+    public Mochila(String id, String nombre, String descripcion, double precio, String imagen,
+            String tamano, String materialFabricacion, boolean tieneCompartimentoPC) {
+
         super(id, nombre, descripcion, precio, imagen);
-        
+
         this.tamano = tamano;
         this.materialFabricacion = materialFabricacion;
         this.tieneCompartimentoPC = tieneCompartimentoPC;

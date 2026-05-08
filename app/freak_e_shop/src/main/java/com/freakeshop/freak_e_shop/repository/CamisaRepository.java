@@ -1,31 +1,42 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.freakeshop.freak_e_shop.repository;
 
+import com.freakeshop.freak_e_shop.DataDirectoryResolver;
 import com.freakeshop.freak_e_shop.model.Camisa;
+import org.springframework.stereotype.Repository;
+
+import jakarta.annotation.PostConstruct;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.*;
 import java.util.*;
 
+@Repository
 public class CamisaRepository {
 
-    private final String RUTA_ARCHIVO = "camisas.txt";
+    private final DataDirectoryResolver dataResolver;
+    private String rutaArchivo;
+
+    public CamisaRepository(DataDirectoryResolver dataResolver) {
+        this.dataResolver = dataResolver;
+    }
+
+    @PostConstruct
+    public void init() {
+        this.rutaArchivo = Paths.get(dataResolver.getPath(), "camisas.txt").toString();
+    }
 
     public void guardar(Camisa camisa) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(RUTA_ARCHIVO, true))) {
-
+        try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(rutaArchivo, true), StandardCharsets.UTF_8))) {
             String linea = camisa.getId() + ";" +
                            camisa.getNombre() + ";" +
                            camisa.getDescripcion() + ";" +
                            camisa.getPrecio() + ";" +
                            camisa.getImagen() + ";" +
                            camisa.getTalla() + ";" +
-                           camisa.getMaterial();
-
+                           camisa.getMaterial() + ";" +
+                           camisa.isDestacado();
             bw.write(linea);
             bw.newLine();
-
         } catch (IOException e) {
             System.out.println("Error al guardar camisa: " + e.getMessage());
         }
@@ -33,32 +44,61 @@ public class CamisaRepository {
 
     public List<Camisa> obtenerTodos() {
         List<Camisa> lista = new ArrayList<>();
-
-        try (BufferedReader br = new BufferedReader(new FileReader(RUTA_ARCHIVO))) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(rutaArchivo), StandardCharsets.UTF_8))) {
             String linea;
-
             while ((linea = br.readLine()) != null) {
                 String[] datos = linea.split(";");
-
-                if (datos.length == 7) {
+                if (datos.length >= 7) {
                     Camisa c = new Camisa(
-                        datos[0],
-                        datos[1],
-                        datos[2],
+                        datos[0], datos[1], datos[2],
                         Double.parseDouble(datos[3]),
-                        datos[4],
-                        datos[5],
-                        datos[6]
+                        datos[4], datos[5], datos[6]
                     );
-
+                    if (datos.length > 7) c.setDestacado(Boolean.parseBoolean(datos[7]));
                     lista.add(c);
                 }
             }
-
         } catch (IOException e) {
-            System.out.println("Archivo no encontrado.");
+            // Archivo no encontrado — se creará al guardar
         }
-
         return lista;
+    }
+
+    public Camisa buscarPorId(String id) {
+        return obtenerTodos().stream()
+                .filter(c -> c.getId().equals(id))
+                .findFirst().orElse(null);
+    }
+
+    public void eliminar(String id) {
+        List<Camisa> lista = obtenerTodos();
+        lista.removeIf(c -> c.getId().equals(id));
+        reescribir(lista);
+    }
+
+    private void reescribir(List<Camisa> lista) {
+        try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(rutaArchivo), StandardCharsets.UTF_8))) {
+            for (Camisa c : lista) {
+                String linea = c.getId() + ";" + c.getNombre() + ";" +
+                               c.getDescripcion() + ";" + c.getPrecio() + ";" +
+                               c.getImagen() + ";" + c.getTalla() + ";" +
+                               c.getMaterial() + ";" + c.isDestacado();
+                bw.write(linea);
+                bw.newLine();
+            }
+        } catch (IOException e) {
+            System.out.println("Error al reescribir camisas: " + e.getMessage());
+        }
+    }
+
+    public void actualizar(Camisa camisa) {
+        List<Camisa> lista = obtenerTodos();
+        for (int i = 0; i < lista.size(); i++) {
+            if (lista.get(i).getId().equals(camisa.getId())) {
+                lista.set(i, camisa);
+                break;
+            }
+        }
+        reescribir(lista);
     }
 }

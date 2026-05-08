@@ -1,18 +1,9 @@
-// ==========================================
-// CART FUNCTIONALITY (Local Storage Based)
-// ==========================================
-
-let strideCart = JSON.parse(localStorage.getItem('strideCart')) || [];
+// ── Funcionalidad Principal de Freak-E Shop ────────
 
 document.addEventListener('DOMContentLoaded', function () {
-    updateCartBadge();
-    if (document.getElementById('cartItemsList')) {
-        renderCartItems();
-    }
+    initNavbarSearch();
 
-    // ==========================================
-    // Scroll Fade-In Animation
-    // ==========================================
+    // ── Animación de Desvanecimiento ───────────────────
     const fadeElements = document.querySelectorAll('.fade-in-section');
     if (fadeElements.length > 0) {
         const observer = new IntersectionObserver((entries) => {
@@ -25,9 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
         fadeElements.forEach(el => observer.observe(el));
     }
 
-    // ==========================================
-    // Navbar scroll effect
-    // ==========================================
+    // ── Efecto de Desplazamiento del Navbar ────────────
     const navbar = document.querySelector('.stride-navbar');
     if (navbar) {
         window.addEventListener('scroll', () => {
@@ -36,264 +25,322 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // ==========================================
-    // Quick View Modal
-    // ==========================================
-    const productPreviewModal = document.getElementById('productPreviewModal');
-    if (productPreviewModal) {
-        const bsModal = new bootstrap.Modal(productPreviewModal);
-
-        document.querySelectorAll('.product-card').forEach(card => {
-            card.addEventListener('click', function (e) {
-                if (e.target.closest('button') || e.target.closest('.product-colors')) return;
-
-                const name = this.querySelector('.product-name').textContent;
-                const price = this.querySelector('.current-price').textContent;
-                const img = this.querySelector('.product-image-wrapper img').src;
-                const category = this.querySelector('.product-category').textContent;
-
-                document.getElementById('modalProductTitle').textContent = name;
-                document.getElementById('modalProductPrice').textContent = price;
-                document.getElementById('modalProductImg').src = img;
-                document.getElementById('modalProductCategory').textContent = category;
-
-                // Reset selection
-                document.querySelectorAll('.color-option, .size-option').forEach(el => el.classList.remove('active'));
-                if (document.querySelector('.color-option')) document.querySelector('.color-option').classList.add('active');
-                if (document.querySelector('.size-option')) document.querySelector('.size-option').classList.add('active');
-
-                bsModal.show();
-            });
-        });
-
-        // Add to cart from Modal
-        const modalAddBtn = document.getElementById('modalAddToCartBtn');
-        if (modalAddBtn) {
-            modalAddBtn.onclick = function () {
-                const product = {
-                    id: 'prod_' + Date.now(),
-                    name: document.getElementById('modalProductTitle').textContent,
-                    price: parseFloat(document.getElementById('modalProductPrice').textContent.replace('$', '')),
-                    img: document.getElementById('modalProductImg').src,
-                    variant: 'Size: ' + (document.querySelector('.size-option.active')?.textContent || 'M') + ' | Color: ' + (document.getElementById('modalSelectedColor')?.textContent || 'Default')
-                };
-                addToCart(product);
-
-                // Visual feedback in modal
-                const originalContent = modalAddBtn.innerHTML;
-                modalAddBtn.innerHTML = '<i class="bi bi-check-lg"></i> Added to Cart!';
-                modalAddBtn.classList.add('btn-added-success'); // Custom style for green
-
-                setTimeout(() => {
-                    bsModal.hide();
-                    // Reset button after modal is gone
-                    setTimeout(() => {
-                        modalAddBtn.innerHTML = originalContent;
-                        modalAddBtn.classList.remove('btn-added-success');
-                    }, 500);
-                }, 800);
-            };
-        }
-
-        // Color/Size selection in modal
-        document.querySelectorAll('.color-option, .size-option').forEach(el => {
-            el.addEventListener('click', function () {
-                const siblings = this.parentElement.children;
-                for (let sibling of siblings) sibling.classList.remove('active');
-                this.classList.add('active');
-                if (this.classList.contains('color-option')) {
-                    const colorDisplay = document.getElementById('modalSelectedColor');
-                    if (colorDisplay) colorDisplay.textContent = this.getAttribute('title') || 'Selected';
-                }
-            });
-        });
-    }
-
-    // Theme icon update (class is now added in <head> to prevent flashing)
+    // Actualización del icono de tema
     const savedTheme = localStorage.getItem('stride-theme');
     if (savedTheme === 'light') {
         const icon = document.getElementById('themeIcon');
         if (icon) { icon.classList.remove('bi-sun'); icon.classList.add('bi-moon-stars'); }
     }
-});
 
-// ==========================================
-// Core Cart Functions
-// ==========================================
-
-// Global listener for all Add to Cart buttons
-document.addEventListener('click', function (e) {
-    const btn = e.target.closest('.btn-add-to-cart');
-    if (btn) {
-        e.preventDefault();
-        e.stopPropagation();
-        handleAddToCart(btn);
-    }
-});
-
-function handleAddToCart(btn) {
-    const card = btn.closest('.product-card');
-    if (!card) return;
-
-    const product = {
-        id: 'prod_' + Date.now(),
-        name: card.querySelector('.product-name').textContent,
-        price: parseFloat(card.querySelector('.current-price').textContent.replace('$', '')),
-        img: card.querySelector('.product-image-wrapper img').src,
-        variant: 'Standard Edition'
-    };
-    addToCart(product);
-
-    // Visual feedback
-    const originalContent = btn.innerHTML;
-    btn.innerHTML = '<i class="bi bi-check-lg"></i> Added!';
-    btn.classList.add('btn-added-success');
-
-    // Add a bounce effect class if desired
-    btn.style.transform = 'scale(1.05)';
-
-    setTimeout(() => {
-        btn.innerHTML = originalContent;
-        btn.classList.remove('btn-added-success');
-        btn.style.transform = '';
-    }, 2000);
-}
-
-function addToCart(product) {
-    const existing = strideCart.find(item => item.name === product.name && item.variant === product.variant);
-    if (existing) {
-        existing.qty++;
-    } else {
-        product.qty = 1;
-        strideCart.push(product);
-    }
-    saveCart();
-    updateCartBadge();
-    showToast(`Added ${product.name} to cart`);
-}
-
-function saveCart() {
-    localStorage.setItem('strideCart', JSON.stringify(strideCart));
-}
-
-function updateCartBadge() {
-    const count = strideCart.reduce((acc, item) => acc + item.qty, 0);
-    document.querySelectorAll('.cart-badge').forEach(b => {
-        b.textContent = count;
-        b.style.display = count > 0 ? 'flex' : 'none';
-    });
-}
-
-function showToast(msg) {
-    // Simple alert for now, or could be a pretty toast
-    console.log('Toast:', msg);
-}
-
-// ==========================================
-// Cart Page UI Rendering
-// ==========================================
-
-function renderCartItems() {
-    const container = document.getElementById('cartItemsList');
-    if (!container) return;
-
-    if (strideCart.length === 0) {
-        showEmptyCartMsg();
-        return;
+    // ── Inicialización de Base de Datos Simulada (Usuarios) ───
+    function getStoredUsers() {
+        const stored = localStorage.getItem('stride_db_users');
+        if (stored) return JSON.parse(stored);
+        const defaults = [
+            { email: 'admin', password: 'admin123', role: 'admin', name: 'Administrador' },
+            { email: 'user@ejemplo.com', password: 'user123', role: 'user', name: 'Usuario Prueba' }
+        ];
+        localStorage.setItem('stride_db_users', JSON.stringify(defaults));
+        return defaults;
     }
 
-    container.innerHTML = '';
-    strideCart.forEach((item, index) => {
-        const itemHtml = `
-            <div class="cart-item" id="item-${index}">
-                <div class="cart-product">
-                    <div class="cart-product-image">
-                        <img src="${item.img}" alt="${item.name}"/>
-                    </div>
-                    <div>
-                        <div class="cart-product-name">${item.name}</div>
-                        <div class="cart-product-variant">${item.variant}</div>
-                    </div>
-                </div>
-                <div class="cart-price">
-                    <span class="current">$${item.price}</span>
-                </div>
-                <div>
-                    <div class="qty-control">
-                        <button class="qty-btn" onclick="updateItemQty(${index}, -1)"><i class="bi bi-dash"></i></button>
-                        <span class="qty-value">${item.qty}</span>
-                        <button class="qty-btn" onclick="updateItemQty(${index}, 1)"><i class="bi bi-plus"></i></button>
-                    </div>
-                </div>
-                <div class="cart-total">$${(item.price * item.qty).toFixed(0)}</div>
-                <button class="cart-remove" onclick="removeCartItem(${index})"><i class="bi bi-x-lg"></i></button>
-            </div>
-        `;
-        container.innerHTML += itemHtml;
-    });
+    // Simulación de autenticación
+    async function authenticateUser(username, password, role) {
+        if (role === 'admin' && username === 'admin' && password === 'admin123') {
+            try {
+                await fetch('/api/login', { method: 'POST' });
+            } catch(e) {
+                console.error("Error sincronizando sesión en el servidor:", e);
+            }
+            return { success: true, user: { email: 'admin', role: 'admin', name: 'Administrador' } };
+        }
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                const userTrim = username.trim();
+                const passTrim = password.trim();
 
-    updateOrderSummary();
-}
+                const users = getStoredUsers();
+                const found = users.find(u => u.email === userTrim && u.password === passTrim && u.role === role);
+                
+                if (found) {
+                    resolve({ success: true, user: found });
+                } else {
+                    reject(new Error('Credenciales incorrectas'));
+                }
+            }, 800);
+        });
+    }
 
-function updateItemQty(index, delta) {
-    strideCart[index].qty += delta;
-    if (strideCart[index].qty < 1) strideCart[index].qty = 1;
-    saveCart();
-    renderCartItems();
-    updateCartBadge();
-}
+    async function registerUser(name, email, password) {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                const users = getStoredUsers();
+                if (users.some(u => u.email === email)) {
+                    reject(new Error('El correo ya está registrado'));
+                    return;
+                }
+                const newUser = { email, password, role: 'user', name };
+                users.push(newUser);
+                localStorage.setItem('stride_db_users', JSON.stringify(users));
+                resolve({ success: true, user: newUser });
+            }, 800);
+        });
+    }
 
-function removeCartItem(index) {
-    strideCart.splice(index, 1);
-    saveCart();
-    renderCartItems();
-    updateCartBadge();
-}
+    function handleLoginForm(formId, role, successCallback) {
+        const form = document.getElementById(formId);
+        if (!form) return;
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const btn = form.querySelector('button[type="submit"]');
+            const originalText = btn.innerHTML;
+            const usernameInput = form.querySelector('input[type="text"], input[type="email"]');
+            const passwordInput = form.querySelector('input[type="password"]');
+            
+            btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Verificando...';
+            btn.disabled = true;
+            
+            try {
+                const result = await authenticateUser(usernameInput.value, passwordInput.value, role);
+                btn.innerHTML = '<i class="bi bi-check-circle"></i> ¡Éxito!';
+                btn.classList.replace('btn-stride-primary', 'btn-success');
+                setTimeout(() => {
+                    const modal = bootstrap.Modal.getInstance(form.closest('.modal'));
+                    if (modal) modal.hide();
+                    successCallback(result.user);
+                }, 600);
+            } catch (error) {
+                btn.innerHTML = '<i class="bi bi-x-circle"></i> Error';
+                btn.classList.replace('btn-stride-primary', 'btn-danger');
+                alert(error.message);
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    btn.classList.replace('btn-danger', 'btn-stride-primary');
+                }, 1500);
+            }
+        });
+    }
 
-function clearCart() {
-    strideCart = [];
-    saveCart();
-    renderCartItems();
-    updateCartBadge();
-}
+    function login(user) {
+        localStorage.setItem('stride_active_user', JSON.stringify(user));
+        checkAuthStatus();
+    }
 
-function updateOrderSummary() {
-    const subtotal = strideCart.reduce((acc, item) => acc + (item.price * item.qty), 0);
-    const tax = Math.round(subtotal * 0.08);
-    const shipping = subtotal > 75 || subtotal === 0 ? 0 : 9.99;
-    const total = subtotal + tax + shipping;
-
-    const els = {
-        sub: document.getElementById('summarySubtotal'),
-        tax: document.getElementById('summaryTax'),
-        ship: document.getElementById('summaryShipping'),
-        total: document.getElementById('summaryTotal'),
-        msg: document.getElementById('freeShippingMsg')
+    window.logout = async function() {
+        const activeUserStr = localStorage.getItem('stride_active_user');
+        if (activeUserStr) {
+            try {
+                const activeUser = JSON.parse(activeUserStr);
+                if (activeUser.role === 'admin') {
+                    await fetch('/api/logout', { method: 'POST' });
+                }
+            } catch (e) {
+                console.error("Error validando usuario activo al cerrar sesión:", e);
+            }
+        }
+        localStorage.removeItem('stride_active_user');
+        window.location.href = '/';
     };
 
-    if (els.sub) els.sub.textContent = '$' + subtotal;
-    if (els.tax) els.tax.textContent = '$' + tax;
-    if (els.ship) {
-        els.ship.textContent = shipping === 0 ? 'FREE' : '$' + shipping.toFixed(2);
-        els.ship.className = shipping === 0 ? 'value free' : 'value';
+    function checkAuthStatus() {
+        const activeUserStr = localStorage.getItem('stride_active_user');
+        if (!activeUserStr) return;
+        
+        const activeUser = JSON.parse(activeUserStr);
+        const icon = document.getElementById('userIcon');
+        if (icon) {
+            icon.classList.remove('bi-person-circle');
+            icon.classList.add('bi-person-check-fill', 'text-success');
+        }
+        
+        const dropdownMenu = document.getElementById('userDropdownMenu');
+        if (dropdownMenu) {
+            let html = `<li><span class="dropdown-item-text fw-bold">Hola, ${activeUser.name}</span></li><li><hr class="dropdown-divider"></li>`;
+            
+            if (activeUser.role === 'admin') {
+                html += `<li><a class="dropdown-item" href="/admin">Panel de Administración</a></li>`;
+            }
+            
+            html += `<li><a class="dropdown-item text-danger" href="#" onclick="logout()">Cerrar sesión</a></li>`;
+            dropdownMenu.innerHTML = html;
+        }
     }
-    if (els.total) els.total.textContent = '$' + total;
-    if (els.msg) els.msg.style.display = (subtotal > 75) ? 'block' : 'none';
+
+    checkAuthStatus();
+
+    handleLoginForm('userLoginForm', 'user', (user) => {
+        login(user);
+    });
+
+    handleLoginForm('adminLoginForm', 'admin', (user) => {
+        login(user);
+        if (window.location.pathname !== '/admin') {
+            window.location.href = '/admin';
+        }
+    });
+
+    const registerForm = document.getElementById('registerForm');
+    if (registerForm) {
+        registerForm.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const btn = registerForm.querySelector('button[type="submit"]');
+            const originalText = btn.innerHTML;
+            const nameInput = document.getElementById('regName');
+            const emailInput = document.getElementById('regEmail');
+            const passwordInput = document.getElementById('regPassword');
+            
+            btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Registrando...';
+            btn.disabled = true;
+            
+            try {
+                const result = await registerUser(nameInput.value, emailInput.value, passwordInput.value);
+                btn.innerHTML = '<i class="bi bi-check-circle"></i> ¡Cuenta Creada!';
+                btn.classList.replace('btn-stride-primary', 'btn-success');
+                setTimeout(() => {
+                    const modal = bootstrap.Modal.getInstance(registerForm.closest('.modal'));
+                    if (modal) modal.hide();
+                    login(result.user);
+                }, 600);
+            } catch (error) {
+                btn.innerHTML = '<i class="bi bi-x-circle"></i> Error';
+                btn.classList.replace('btn-stride-primary', 'btn-danger');
+                alert(error.message);
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    btn.classList.replace('btn-danger', 'btn-stride-primary');
+                }, 1500);
+            }
+        });
+    }
+
+});
+
+// ── Búsqueda de Navbar ─────────────────────────────
+
+function initNavbarSearch() {
+    const btnOpen = document.getElementById('searchBtnOpenOverlay');
+    const btnClose = document.getElementById('searchBtnCloseOverlay');
+    const overlay = document.getElementById('searchOverlay');
+    const input = document.getElementById('navSearchInput');
+
+    if (!btnOpen || !overlay) return;
+
+    btnOpen.addEventListener('click', () => {
+        overlay.classList.add('is-visible');
+        void overlay.offsetHeight;
+        overlay.classList.add('is-active');
+        document.body.style.overflow = 'hidden';
+        setTimeout(() => input.focus(), 300);
+    });
+
+    const closeOverlay = () => {
+        overlay.classList.remove('is-active');
+        document.body.style.overflow = '';
+        overlay.addEventListener('transitionend', function handler() {
+            overlay.removeEventListener('transitionend', handler);
+            if (!overlay.classList.contains('is-active')) {
+                overlay.classList.remove('is-visible');
+            }
+        });
+    };
+
+    if (btnClose) btnClose.addEventListener('click', closeOverlay);
+
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closeOverlay();
+    });
+
+    window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && overlay.classList.contains('is-active')) {
+            closeOverlay();
+        }
+    });
+
+    // Búsqueda en vivo (Autocomplete)
+    const dropdown = document.getElementById('searchDropdown');
+    let searchTimeout = null;
+
+    if (input && dropdown) {
+        input.addEventListener('input', function() {
+            const query = this.value.trim();
+            
+            clearTimeout(searchTimeout);
+            
+            if (query.length < 2) {
+                dropdown.innerHTML = '';
+                dropdown.style.display = 'none';
+                return;
+            }
+            
+            searchTimeout = setTimeout(() => {
+                fetch(`/api/productos/buscar?q=${encodeURIComponent(query)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.length === 0) {
+                            dropdown.innerHTML = `<div class="search-results-container p-3 text-muted text-center border-secondary bg-dark text-light" style="border-radius: 12px; background-color: var(--stride-bg-card) !important; color: var(--stride-text-primary) !important;">No se encontraron productos para "${escapeHtml(query)}"</div>`;
+                            dropdown.style.display = 'block';
+                            return;
+                        }
+                        
+                        let html = '<div class="search-results-wrapper"><div class="list-group list-group-flush search-results-container">';
+                        data.forEach(p => {
+                            html += `
+                                <a href="/producto/${p.id}" class="list-group-item list-group-item-action search-result-item d-flex align-items-center gap-3">
+                                    <img src="${p.imagen}" alt="${escapeHtml(p.nombre)}" class="search-result-img">
+                                    <div class="search-result-text">
+                                        <h6 class="mb-0 text-truncate" style="max-width: 250px;">${escapeHtml(p.nombre)}</h6>
+                                        <small class="text-accent">${formatearPrecioCOP(p.precio)}</small>
+                                    </div>
+                                </a>
+                            `;
+                        });
+                        
+                        // Añadir opción para ver todos los resultados si hay
+                        html += `
+                            <div class="search-result-footer text-center">
+                                <button type="button" class="btn btn-sm btn-link text-accent text-decoration-none w-100 fw-bold" onclick="document.getElementById('navSearchForm').submit();">
+                                    Ver todos los resultados
+                                </button>
+                            </div>
+                        `;
+                        
+                        // Close the container and wrapper
+                        html += '</div></div>';
+                        
+                        dropdown.innerHTML = html;
+                        dropdown.style.display = 'block';
+                    })
+                    .catch(error => {
+                        console.error('Error buscando productos:', error);
+                    });
+            }, 300); // 300ms debounce
+        });
+    }
+
+    // Ocultar dropdown al hacer click fuera
+    document.addEventListener('click', (e) => {
+        if (dropdown && !dropdown.contains(e.target) && e.target !== input) {
+            dropdown.style.display = 'none';
+        }
+    });
+
+    // El formulario de búsqueda ya envía a /catalog?q=... via form action
 }
 
-function showEmptyCartMsg() {
-    const container = document.getElementById('cartItemsList');
-    container.innerHTML = `
-        <div class="text-center py-5">
-            <i class="bi bi-bag-x" style="font-size:4rem;color:var(--stride-text-muted);"></i>
-            <h3 class="mt-3">¡Tu carrito está vacío! </h3>
-            <p class="text-muted">Explora nuestra colección y encuentra algo genial en Frik-E Shop</p>
-            <a href="catalog.html" class="btn-stride btn-stride-primary mt-3">Start Shopping</a>
-        </div>
-    `;
-    const actions = document.querySelector('.cart-actions');
-    if (actions) actions.style.display = 'none';
-    updateOrderSummary();
+// Helper para formatear precio si no existe globalmente
+function formatearPrecioCOP(precio) {
+    const num = Math.round(precio);
+    return '$ ' + num.toLocaleString('es-CO', { maximumFractionDigits: 0 });
+}
+
+// ── Utilidades ─────────────────────────────────────
+
+function escapeHtml(value) {
+    const element = document.createElement('div');
+    element.textContent = value;
+    return element.innerHTML;
 }
 
 function toggleTheme() {
@@ -304,17 +351,4 @@ function toggleTheme() {
         icon.className = isLight ? 'bi bi-moon-stars' : 'bi bi-sun';
     }
     localStorage.setItem('stride-theme', isLight ? 'light' : 'dark');
-}
-
-function applyPromo() {
-    const input = document.getElementById('promoInput');
-    if (input && input.value.toUpperCase() === 'STRIDE20') {
-        alert('Promo code STRIDE20 applied! (UI Simulation)');
-    } else {
-        alert('Invalid promo code');
-    }
-}
-
-function proceedToCheckout() {
-    alert('Proceeding to checkout... (Simulation)');
 }

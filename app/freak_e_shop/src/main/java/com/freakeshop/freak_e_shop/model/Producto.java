@@ -1,10 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package com.freakeshop.freak_e_shop.model;
-
-
 
 public abstract class Producto {
 
@@ -13,6 +8,7 @@ public abstract class Producto {
     private String descripcion;
     private double precio;
     private String imagen;
+    private boolean destacado;
 
     // Constructor
     public Producto(String id, String nombre, String descripcion, double precio, String imagen) {
@@ -21,6 +17,7 @@ public abstract class Producto {
         this.descripcion = descripcion;
         this.precio = precio;
         this.imagen = imagen;
+        this.destacado = false;
     }
 
     // MÉTODO ABSTRACTO
@@ -63,5 +60,25 @@ public abstract class Producto {
             throw new IllegalArgumentException("El nombre debe tener al menos 3 caracteres");
         }
         this.nombre = nombre;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public void setPrecio(double precio) {
+        this.precio = precio;
+    }
+
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
+    }
+
+    public boolean isDestacado() {
+        return destacado;
+    }
+
+    public void setDestacado(boolean destacado) {
+        this.destacado = destacado;
     }
 }
