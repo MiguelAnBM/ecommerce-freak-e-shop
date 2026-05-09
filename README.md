@@ -104,7 +104,7 @@ http://localhost:8080
 
 ## 🧩 Diagrama de clases UML
 
-![Diagrama de contexto](docs/uml/Diagrama_contexto.png)
+![Diagrama de contexto](docs/uml/Diagrama_Contexto.png)
 
 ---
 
