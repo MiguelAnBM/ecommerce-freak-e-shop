@@ -69,6 +69,12 @@ Desarrollada con **Spring Boot** y **Thymeleaf**, la plataforma garantiza:
 
 ## 🚀 Cómo ejecutar
 
+## Forma sencilla (A través de URL)
+Simplemente entra al siguiente enlace: https://freak-e-shop.up.railway.app/
+
+---
+## A través de Netbeans/VS Code
+
 ### Requisitos
 - Java JDK 17+
 - Apache NetBeans 22+
