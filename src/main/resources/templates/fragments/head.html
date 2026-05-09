@@ -1,0 +1,41 @@
+<head th:fragment="head (pageTitle)">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Freak-E Shop - Tu Mundo Geek En Un Solo Lugar" />
+    <title th:text="${pageTitle}">Freak-E Shop</title>
+
+    <!-- Favicon / Ícono de la página -->
+    <link rel="icon" type="image/x-icon" th:href="@{/Images/favicon.ico}" href="../static/Images/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" th:href="@{/Images/favicon-32x32.png}" href="../static/Images/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/Images/favicon-16x16.png}" href="../static/Images/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" th:href="@{/Images/apple-touch-icon.png}" href="../static/Images/apple-touch-icon.png" />
+
+    <!-- Fuentes de Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+
+    <!-- CSS de Bootstrap 5.3 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Iconos de Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+
+    <!-- Estilos personalizados -->
+    <link th:href="@{/css/styles.css}" href="../static/css/styles.css" rel="stylesheet" />
+
+    <!-- Precarga del tema para evitar parpadeos -->
+    <script>
+        if (localStorage.getItem('stride-theme') === 'light') {
+            const observer = new MutationObserver(function (mutations, obs) {
+                if (document.body) {
+                    document.body.classList.add('light-theme');
+                    obs.disconnect();
+                }
+            });
+            observer.observe(document.documentElement, { childList: true });
+        }
+    </script>
+</head>

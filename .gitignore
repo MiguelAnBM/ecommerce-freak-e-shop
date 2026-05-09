@@ -47,7 +47,6 @@ buildNumber.properties
 # ========================
 # Spring Boot
 # ========================
-application.properties
 application.yml
 application-*.properties
 application-*.yml

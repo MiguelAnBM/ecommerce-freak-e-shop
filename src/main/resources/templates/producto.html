@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Freak-E Shop - ' + ${producto.nombre})}"></head>
+<body>
+
+<!-- ── Barra de navegación ──────────────────────────── -->
+<div th:replace="~{fragments/header :: navbar}"></div>
+
+<!-- ── Detalle de producto ───────────────────────────── -->
+<section class="catalog-section fade-in-section">
+    <div class="container">
+
+        <!-- Migas de pan -->
+        <div class="breadcrumb-custom">
+            <a th:href="@{/}" href="index.html">Inicio</a> /
+            <a th:href="@{/catalogo}" href="catalog.html">Catálogo</a> /
+            <span th:text="${producto.nombre}">Producto</span>
+        </div>
+
+        <div class="row g-5 mt-2">
+            <!-- Imagen del producto -->
+            <div class="col-lg-6">
+                <div class="product-detail-image-wrapper">
+                    <img th:src="${producto.imagen}" alt="Producto" class="img-fluid rounded" style="width:100%; max-height:500px; object-fit:cover;" />
+                </div>
+            </div>
+
+            <!-- Información del producto -->
+            <div class="col-lg-6">
+                <span class="badge bg-secondary mb-2" th:text="${categoria}">Categoría</span>
+
+                <h1 class="section-title mb-3" th:text="${producto.nombre}">Nombre</h1>
+
+                <div class="product-price mb-3">
+                    <span class="current-price fs-3" th:text="${@precioUtils.formatearCOP(producto.precio)}">$0.00</span>
+                </div>
+
+                <p class="mb-4" style="line-height:1.8; opacity:0.85;" th:text="${producto.descripcion}">
+                    Descripción del producto
+                </p>
+
+                <!-- Atributos específicos por categoría -->
+                <div class="mb-4">
+                    <h5 class="mb-3" style="font-weight:600;">Detalles del producto</h5>
+                    <ul class="list-unstyled" style="line-height:2.2;">
+
+                        <!-- Accesorio -->
+                        <li th:if="${categoria == 'Accesorio'}">
+                            <i class="bi bi-check-lg text-success me-2"></i>
+                            <strong>Tipo:</strong> <span th:text="${producto.tipo}"></span>
+                        </li>
+
+                        <!-- Mochila -->
+                        <li th:if="${categoria == 'Mochila'}">
+                            <i class="bi bi-check-lg text-success me-2"></i>
+                            <strong>Tamaño:</strong> <span th:text="${producto.tamano}"></span>
+                        </li>
+                        <li th:if="${categoria == 'Mochila'}">
+                            <i class="bi bi-check-lg text-success me-2"></i>
+                            <strong>Material:</strong> <span th:text="${producto.materialFabricacion}"></span>
+                        </li>
+                        <li th:if="${categoria == 'Mochila'}">
+                            <i class="bi bi-check-lg text-success me-2"></i>
+                            <strong>Compartimento PC:</strong>
+                            <span th:text="${producto.tieneCompartimentoPC} ? 'Sí' : 'No'"></span>
+                        </li>
+
+                        <!-- Comic -->
+                        <li th:if="${categoria == 'Comic'}">
+                            <i class="bi bi-check-lg text-success me-2"></i>
+                            <strong>Editorial:</strong> <span th:text="${producto.editorial}"></span>
+                        </li>
+                        <li th:if="${categoria == 'Comic'}">
+                            <i class="bi bi-check-lg text-success me-2"></i>
+                            <strong>Volumen:</strong> <span th:text="${producto.numeroVolumen}"></span>
+                        </li>
+                        <li th:if="${categoria == 'Comic'}">
+                            <i class="bi bi-check-lg text-success me-2"></i>
+                            <strong>Idioma:</strong> <span th:text="${producto.idioma}"></span>
+                        </li>
+
+                        <!-- Camisa -->
+                        <li th:if="${categoria == 'Camisa'}">
+                            <i class="bi bi-check-lg text-success me-2"></i>
+                            <strong>Talla:</strong> <span th:text="${producto.talla}"></span>
+                        </li>
+                        <li th:if="${categoria == 'Camisa'}">
+                            <i class="bi bi-check-lg text-success me-2"></i>
+                            <strong>Material:</strong> <span th:text="${producto.material}"></span>
+                        </li>
+
+                        <!-- FiguraColeccionable -->
+                        <li th:if="${categoria == 'FiguraColeccionable'}">
+                            <i class="bi bi-check-lg text-success me-2"></i>
+                            <strong>Franquicia:</strong> <span th:text="${producto.franquicia}"></span>
+                        </li>
+                        <li th:if="${categoria == 'FiguraColeccionable'}">
+                            <i class="bi bi-check-lg text-success me-2"></i>
+                            <strong>Edición Limitada:</strong>
+                            <span th:text="${producto.edicionLimitada} ? 'Sí' : 'No'"></span>
+                        </li>
+
+                        <!-- Peluche -->
+                        <li th:if="${categoria == 'Peluche'}">
+                            <i class="bi bi-check-lg text-success me-2"></i>
+                            <strong>Material:</strong> <span th:text="${producto.material}"></span>
+                        </li>
+                        <li th:if="${categoria == 'Peluche'}">
+                            <i class="bi bi-check-lg text-success me-2"></i>
+                            <strong>Tamaño:</strong> <span th:text="${producto.tamano}"></span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Stock -->
+                <p class="mb-3">
+                    <i class="bi bi-box-seam me-1"></i>
+                    <span th:if="${stock > 0}" th:text="'Stock disponible: ' + ${stock} + ' unidades'" class="text-success"></span>
+                    <span th:if="${stock <= 0}" class="text-danger">Sin stock</span>
+                </p>
+
+                <!-- Botón agregar al carrito -->
+                <form th:action="@{/carrito/añadir}" method="post" th:if="${stock > 0}">
+                    <input type="hidden" name="productoId" th:value="${producto.id}" />
+                    <button type="submit" class="btn-stride btn-stride-primary w-100">
+                        <i class="bi bi-bag-fill me-2"></i> Agregar al Carrito
+                    </button>
+                </form>
+                <button th:if="${stock <= 0}" class="btn-stride btn-stride-secondary w-100" disabled>
+                    <i class="bi bi-x-circle me-2"></i> Agotado
+                </button>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── Pie de página ────────────────────────────────── -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<!-- Scripts -->
+<div th:replace="~{fragments/scripts :: scripts}"></div>
+
+</body>
+</html>
