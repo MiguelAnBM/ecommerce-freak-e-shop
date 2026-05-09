@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head :: head('Freak-E Shop - Reportes')}"></head>
+<style>
+    .report-table-container {
+        max-height: 450px;
+        overflow-y: auto;
+        display: block;
+        /* Asegura que el contenedor respete el overflow */
+    }
+
+    .report-table-container table {
+        border-collapse: separate !important;
+        border-spacing: 0;
+        width: 100%;
+    }
+
+    .report-table-container thead th {
+        position: -webkit-sticky !important;
+        /* Safari */
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 999 !important;
+        background-color: #212529 !important;
+        color: var(--stride-accent) !important;
+        border-bottom: 2px solid #333 !important;
+        border-top: none !important;
+    }
+
+    /* Evita que los bordes de la tabla se desplacen */
+    .report-table-container th,
+    .report-table-container td {
+        border-top: none !important;
+    }
+</style>
+
+<body>
+
+    <!-- ── Barra de navegación ──────────────────────────── -->
+    <div th:replace="~{fragments/header :: navbar}"></div>
+
+    <!-- ── Sección de Reportes ──────────────────────────── -->
+    <section class="catalog-section fade-in-section">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="section-title mb-0">Reportes y Estadísticas</h2>
+                    <p class="section-subtitle">Análisis de ventas y desempeño del catálogo</p>
+                </div>
+                <div>
+                    <a th:href="@{/admin}" class="btn btn-accent"><i class="bi bi-arrow-left me-2"></i>Volver al
+                        Panel</a>
+                </div>
+            </div>
+
+            <!-- ── Tarjetas de Métricas ──────────────────────────── -->
+            <div class="row g-4 mb-5">
+                <div class="col-md-3 col-sm-6">
+                    <div class="card bg-dark text-light border-secondary h-100 text-center p-3 shadow-sm"
+                        style="background-color: var(--stride-bg-card) !important;">
+                        <i class="bi bi-cart-check fs-1 text-accent mb-2"></i>
+                        <h5 class="card-title text-muted mb-1 fs-6">Ventas Realizadas</h5>
+                        <p class="card-text fs-2 fw-bold m-0" th:text="${reporte.totalVentas}">0</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="card bg-dark text-light border-secondary h-100 text-center p-3 shadow-sm"
+                        style="background-color: var(--stride-bg-card) !important;">
+                        <i class="bi bi-cash-coin fs-1 text-success mb-2"></i>
+                        <h5 class="card-title text-muted mb-1 fs-6">Ingresos Totales</h5>
+                        <p class="card-text fs-3 fw-bold text-success m-0"
+                            th:text="${@precioUtils.formatearCOP(reporte.ingresosTotales)}">$0</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="card bg-dark text-light border-secondary h-100 text-center p-3 shadow-sm"
+                        style="background-color: var(--stride-bg-card) !important;">
+                        <i class="bi bi-graph-up fs-1 text-warning mb-2"></i>
+                        <h5 class="card-title text-muted mb-1 fs-6">Promedio por Venta</h5>
+                        <p class="card-text fs-3 fw-bold text-warning m-0"
+                            th:text="${@precioUtils.formatearCOP(reporte.ingresoPromedio)}">$0</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="card bg-dark text-light border-secondary h-100 text-center p-3 shadow-sm"
+                        style="background-color: var(--stride-bg-card) !important;">
+                        <i class="bi bi-star-fill fs-1 text-primary mb-2"></i>
+                        <h5 class="card-title text-muted mb-1 fs-6">Top Producto</h5>
+                        <p class="card-text fs-6 fw-bold m-0 text-truncate px-2"
+                            th:title="${reporte.productoMasVendidoNombre}"
+                            th:text="${reporte.productoMasVendidoNombre}">Ninguno</p>
+                        <small class="text-muted" th:if="${reporte.productoMasVendidoUnidades > 0}"
+                            th:text="${reporte.productoMasVendidoUnidades} + ' unidades'"></small>
+                    </div>
+                </div>
+            </div>
+
+            <div th:if="${reporte.totalVentas == 0}"
+                class="alert alert-secondary text-center p-5 border-secondary bg-dark"
+                style="background-color: var(--stride-bg-card) !important;">
+                <i class="bi bi-inbox fs-1 d-block mb-3 text-accent"></i>
+                <h4 class="text-accent fw-bold">Aún no hay ventas registradas</h4>
+                <p class="text-accent">Los datos de tablas y gráficos aparecerán aquí una vez se confirmen los primeros
+                    pedidos.</p>
+            </div>
+
+            <div class="row g-4" th:if="${reporte.totalVentas > 0}">
+                <!-- ── Tabla: Ventas por Categoría (Más estrecha) ──────────────────────────── -->
+                <div class="col-lg-3">
+                    <div class="card bg-dark text-light border-secondary h-100"
+                        style="background-color: var(--stride-bg-card) !important;">
+                        <div class="card-header border-secondary bg-transparent pt-3 pb-2">
+                            <h5 class="mb-0 text-accent"><i class="bi bi-pie-chart me-2"></i>Total Unidades Vendidas
+                            </h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table stride-table table-hover align-middle m-0">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th scope="col" class="ps-3">Categoría</th>
+                                            <th scope="col" class="text-center pe-3">Unid.</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="cat : ${reporte.ventasPorCategoria.keySet()}">
+                                            <td class="ps-3"><span class="badge bg-secondary"
+                                                    th:text="${cat}">Cat</span></td>
+                                            <td class="text-center pe-3"
+                                                th:text="${reporte.ventasPorCategoria.get(cat)}">0
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer border-secondary bg-transparent py-3" style="border-top: 2px solid #333 !important;">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="small fw-bold text-muted">TOTAL UNIDADES</span>
+                                <span class="fs-5 fw-bold text-accent"
+                                    th:text="${#aggregates.sum(reporte.ventasPorCategoria.values())}">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── Historial de Ventas (Expandido a 9 columnas) ──────────────────────────── -->
+                <div class="col-lg-9">
+                    <div class="card bg-dark text-light border-secondary h-100"
+                        style="background-color: var(--stride-bg-card) !important;">
+
+                        <div
+                            class="card-header border-secondary bg-transparent pt-3 pb-2 d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0 text-accent"><i class="bi bi-clock-history me-2"></i>Historial de Ventas
+                            </h5>
+                            <span class="badge bg-secondary" th:text="${pedidosCompletos.size()} + ' ventas en total'">0
+                                ventas</span>
+                        </div>
+
+                        <div class="card-body p-0">
+                            <!-- Scroll para el historial -->
+                            <div class="report-table-container">
+                                <table class="table stride-table table-hover align-middle m-0">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th scope="col" class="ps-3">ID Venta</th>
+                                            <th scope="col">Fecha</th>
+                                            <th scope="col">Método</th>
+                                            <th scope="col" class="text-end">Total</th>
+                                            <th scope="col" class="text-center pe-3">Detalle</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="pedido : ${pedidosCompletos}">
+                                            <td class="ps-3 fw-bold font-monospace text-muted"
+                                                th:text="${pedido.numeroPedido}">PED-000</td>
+                                            <td th:text="${pedido.fecha}">01/01/2000</td>
+                                            <td>
+                                                <span class="badge"
+                                                    th:classappend="${pedido.metodoPago == 'NEQUI' ? 'bg-info text-dark' : 'bg-secondary'}"
+                                                    th:text="${pedido.metodoPago}">NEQUI</span>
+                                            </td>
+                                            <td class="text-end fw-bold text-accent"
+                                                th:text="${@precioUtils.formatearCOP(pedido.total)}">$0</td>
+                                            <td class="text-center pe-3">
+                                                <button type="button" class="btn btn-sm btn-outline-light"
+                                                    data-bs-toggle="popover" data-bs-trigger="focus"
+                                                    title="Artículos comprados"
+                                                    th:data-bs-content="${#strings.listJoin(pedido.items.![cantidad + 'x ' + nombreProducto], ', ')}">
+                                                    <i class="bi bi-box-seam"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="card-footer border-secondary bg-transparent py-3 d-flex justify-content-end align-items-center"
+                            style="border-top: 2px solid #333 !important;">
+                            <span class="text-muted me-3 fw-bold small">TOTAL RECAUDADO:</span>
+                            <span class="fs-5 fw-bold text-success"
+                                th:text="${@precioUtils.formatearCOP(reporte.ingresosTotales)}">$0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ── Pie de página ────────────────────────────────── -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+    <!-- Scripts -->
+    <div th:replace="~{fragments/scripts :: scripts}"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Inicializar popovers para el detalle de artículos
+            var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+            var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+                return new bootstrap.Popover(popoverTriggerEl)
+            })
+        });
+    </script>
+
+</body>
+
+</html>
