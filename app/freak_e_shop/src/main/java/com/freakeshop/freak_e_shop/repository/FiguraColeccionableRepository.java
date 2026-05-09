@@ -26,10 +26,13 @@ public class FiguraColeccionableRepository {
     }
 
     public void guardar(FiguraColeccionable figura) {
+        // Limpiamos la descripción de posibles puntos y coma que rompan el split
+        String descLimpia = figura.getDescripcion().replace(";", ",");
+        
         try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(rutaArchivo, true), StandardCharsets.UTF_8))) {
             String linea = figura.getId() + ";" +
                            figura.getNombre() + ";" +
-                           figura.getDescripcion() + ";" +
+                           descLimpia + ";" +
                            figura.getPrecio() + ";" +
                            figura.getImagen() + ";" +
                            figura.getFranquicia() + ";" +
@@ -80,8 +83,11 @@ public class FiguraColeccionableRepository {
     private void reescribir(List<FiguraColeccionable> lista) {
         try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(rutaArchivo), StandardCharsets.UTF_8))) {
             for (FiguraColeccionable f : lista) {
+                // Limpiamos la descripción por si alguna figura nueva o editada trae un ";"
+                String descLimpia = (f.getDescripcion() != null) ? f.getDescripcion().replace(";", ",") : "";
+                
                 String linea = f.getId() + ";" + f.getNombre() + ";" +
-                               f.getDescripcion() + ";" + f.getPrecio() + ";" +
+                               descLimpia + ";" + f.getPrecio() + ";" +
                                f.getImagen() + ";" + f.getFranquicia() + ";" +
                                f.isEdicionLimitada() + ";" + f.isDestacado();
                 bw.write(linea);

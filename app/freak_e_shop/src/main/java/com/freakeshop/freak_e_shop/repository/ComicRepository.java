@@ -26,22 +26,26 @@ public class ComicRepository {
     }
 
     public void guardar(Comic comic) {
+        // Limpiamos la descripción de posibles puntos y coma que rompan el split
+        String descLimpia = comic.getDescripcion().replace(";", ","); 
+        
         try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(rutaArchivo, true), StandardCharsets.UTF_8))) {
             String linea = comic.getId() + ";" +
-                           comic.getNombre() + ";" +
-                           comic.getDescripcion() + ";" +
-                           comic.getPrecio() + ";" +
-                           comic.getImagen() + ";" +
-                           comic.getEditorial() + ";" +
-                           comic.getNumeroVolumen() + ";" +
-                           comic.getIdioma() + ";" +
-                           comic.isDestacado();
+                        comic.getNombre() + ";" +
+                        descLimpia + ";" + // Usamos la descripción limpia
+                        comic.getPrecio() + ";" +
+                        comic.getImagen() + ";" +
+                        comic.getEditorial() + ";" +
+                        comic.getNumeroVolumen() + ";" +
+                        comic.getIdioma() + ";" +
+                        comic.isDestacado();
             bw.write(linea);
             bw.newLine();
         } catch (IOException e) {
             System.out.println("Error al guardar comic: " + e.getMessage());
         }
     }
+    
 
     public List<Comic> obtenerTodos() {
         List<Comic> lista = new ArrayList<>();
@@ -81,11 +85,18 @@ public class ComicRepository {
     private void reescribir(List<Comic> lista) {
         try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(rutaArchivo), StandardCharsets.UTF_8))) {
             for (Comic c : lista) {
-                String linea = c.getId() + ";" + c.getNombre() + ";" +
-                               c.getDescripcion() + ";" + c.getPrecio() + ";" +
-                               c.getImagen() + ";" + c.getEditorial() + ";" +
-                               c.getNumeroVolumen() + ";" + c.getIdioma() + ";" +
-                               c.isDestacado();
+                // Limpiamos la descripción por si algún comic nuevo o editado trae un ";"
+                String descLimpia = (c.getDescripcion() != null) ? c.getDescripcion().replace(";", ",") : "";
+                
+                String linea = c.getId() + ";" + 
+                            c.getNombre() + ";" +
+                            descLimpia + ";" + 
+                            c.getPrecio() + ";" +
+                            c.getImagen() + ";" + 
+                            c.getEditorial() + ";" +
+                            c.getNumeroVolumen() + ";" + 
+                            c.getIdioma() + ";" +
+                            c.isDestacado();
                 bw.write(linea);
                 bw.newLine();
             }

@@ -26,10 +26,13 @@ public class AccesorioRepository {
     }
 
     public void guardar(Accesorio accesorio) {
+        // Limpiamos la descripción de posibles puntos y coma que rompan el split
+        String descLimpia = accesorio.getDescripcion().replace(";", ",");
+        
         try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(rutaArchivo, true), StandardCharsets.UTF_8))) {
             String linea = accesorio.getId() + ";" +
                            accesorio.getNombre() + ";" +
-                           accesorio.getDescripcion() + ";" +
+                           descLimpia + ";" +
                            accesorio.getPrecio() + ";" +
                            accesorio.getImagen() + ";" +
                            accesorio.getTipo() + ";" +
@@ -62,7 +65,8 @@ public class AccesorioRepository {
         }
         return lista;
     }
-    public Accesorio buscarPorId(String id) {
+
+    public Accesorio buscarPorId(String id) {
         return obtenerTodos().stream()
                 .filter(a -> a.getId().equals(id))
                 .findFirst().orElse(null);
@@ -77,8 +81,11 @@ public class AccesorioRepository {
     private void reescribir(List<Accesorio> lista) {
         try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(rutaArchivo), StandardCharsets.UTF_8))) {
             for (Accesorio a : lista) {
+                // Limpiamos la descripción por si algún accesorio nuevo o editado trae un ";"
+                String descLimpia = (a.getDescripcion() != null) ? a.getDescripcion().replace(";", ",") : "";
+                
                 String linea = a.getId() + ";" + a.getNombre() + ";" +
-                               a.getDescripcion() + ";" + a.getPrecio() + ";" +
+                               descLimpia + ";" + a.getPrecio() + ";" +
                                a.getImagen() + ";" + a.getTipo() + ";" + a.isDestacado();
                 bw.write(linea);
                 bw.newLine();

@@ -26,10 +26,13 @@ public class PelucheRepository {
     }
 
     public void guardar(Peluche peluche) {
+        // Limpiamos la descripción de posibles puntos y coma que rompan el split
+        String descLimpia = peluche.getDescripcion().replace(";", ",");
+        
         try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(rutaArchivo, true), StandardCharsets.UTF_8))) {
             String linea = peluche.getId() + ";" +
                            peluche.getNombre() + ";" +
-                           peluche.getDescripcion() + ";" +
+                           descLimpia + ";" +
                            peluche.getPrecio() + ";" +
                            peluche.getImagen() + ";" +
                            peluche.getMaterial() + ";" +
@@ -79,8 +82,11 @@ public class PelucheRepository {
     private void reescribir(List<Peluche> lista) {
         try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(rutaArchivo), StandardCharsets.UTF_8))) {
             for (Peluche p : lista) {
+                // Limpiamos la descripción por si algún peluche nuevo o editado trae un ";"
+                String descLimpia = (p.getDescripcion() != null) ? p.getDescripcion().replace(";", ",") : "";
+                
                 String linea = p.getId() + ";" + p.getNombre() + ";" +
-                               p.getDescripcion() + ";" + p.getPrecio() + ";" +
+                               descLimpia + ";" + p.getPrecio() + ";" +
                                p.getImagen() + ";" + p.getMaterial() + ";" +
                                p.getTamano() + ";" + p.isDestacado();
                 bw.write(linea);

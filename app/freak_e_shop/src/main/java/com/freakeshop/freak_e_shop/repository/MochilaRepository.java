@@ -26,10 +26,13 @@ public class MochilaRepository {
     }
 
     public void guardar(Mochila mochila) {
+        // Limpiamos la descripción de posibles puntos y coma que rompan el split
+        String descLimpia = mochila.getDescripcion().replace(";", ",");
+        
         try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(rutaArchivo, true), StandardCharsets.UTF_8))) {
             String linea = mochila.getId() + ";" +
                            mochila.getNombre() + ";" +
-                           mochila.getDescripcion() + ";" +
+                           descLimpia + ";" +
                            mochila.getPrecio() + ";" +
                            mochila.getImagen() + ";" +
                            mochila.getTamano() + ";" +
@@ -81,8 +84,11 @@ public class MochilaRepository {
     private void reescribir(List<Mochila> lista) {
         try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(rutaArchivo), StandardCharsets.UTF_8))) {
             for (Mochila m : lista) {
+                // Limpiamos la descripción por si alguna mochila nueva o editada trae un ";"
+                String descLimpia = (m.getDescripcion() != null) ? m.getDescripcion().replace(";", ",") : "";
+                
                 String linea = m.getId() + ";" + m.getNombre() + ";" +
-                               m.getDescripcion() + ";" + m.getPrecio() + ";" +
+                               descLimpia + ";" + m.getPrecio() + ";" +
                                m.getImagen() + ";" + m.getTamano() + ";" +
                                m.getMaterialFabricacion() + ";" + m.isTieneCompartimentoPC() + ";" +
                                m.isDestacado();

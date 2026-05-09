@@ -26,10 +26,13 @@ public class CamisaRepository {
     }
 
     public void guardar(Camisa camisa) {
+        // Limpiamos la descripción de posibles puntos y coma que rompan el split
+        String descLimpia = camisa.getDescripcion().replace(";", ",");
+        
         try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(rutaArchivo, true), StandardCharsets.UTF_8))) {
             String linea = camisa.getId() + ";" +
                            camisa.getNombre() + ";" +
-                           camisa.getDescripcion() + ";" +
+                           descLimpia + ";" +
                            camisa.getPrecio() + ";" +
                            camisa.getImagen() + ";" +
                            camisa.getTalla() + ";" +
@@ -79,8 +82,11 @@ public class CamisaRepository {
     private void reescribir(List<Camisa> lista) {
         try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(rutaArchivo), StandardCharsets.UTF_8))) {
             for (Camisa c : lista) {
+                // Limpiamos la descripción por si alguna camisa nueva o editada trae un ";"
+                String descLimpia = (c.getDescripcion() != null) ? c.getDescripcion().replace(";", ",") : "";
+                
                 String linea = c.getId() + ";" + c.getNombre() + ";" +
-                               c.getDescripcion() + ";" + c.getPrecio() + ";" +
+                               descLimpia + ";" + c.getPrecio() + ";" +
                                c.getImagen() + ";" + c.getTalla() + ";" +
                                c.getMaterial() + ";" + c.isDestacado();
                 bw.write(linea);
