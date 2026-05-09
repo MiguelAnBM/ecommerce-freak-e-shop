@@ -47,8 +47,8 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					<mainClass>com.freakeshop.freak_e_shop.FreakEShopApplication</mainClass>
-				</configuration>
+                	<mainClass>${spring.boot.mainclass}</mainClass>
+ 				</configuration>
 			</plugin>
 		</plugins>
 	</build>
