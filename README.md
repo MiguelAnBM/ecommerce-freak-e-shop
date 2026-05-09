@@ -39,8 +39,8 @@ Desarrollada con **Spring Boot** y **Thymeleaf**, la plataforma garantiza:
 
 #### 🔐 Seguridad que inspira confianza
 - Protección contra vulnerabilidades comunes  
-- Manejo seguro de sesiones y datos del usuario  
-- Patrón de arquitectura MVC seguro contra ataques
+- Manejo seguro de errores y grandes solicitudes
+- Patrón de arquitectura MVC seguro
 
 #### 💾 Persistencia de datos sólida
 - Guardado de facturas de compra íntegro 
@@ -78,7 +78,7 @@ Desarrollada con **Spring Boot** y **Thymeleaf**, la plataforma garantiza:
 # 1. Clonar
 git clone (https://github.com/MiguelAnBM/ecommerce-freak-e-shop.git)
 
-# 2. Abrir la carpeta app en Apache Netbeans (25+)
+# 2. Abrir la carpeta app en Apache Netbeans (22+)
 File -> Open Project -> freak_e_shop
 
 # 3. Ejecutar la clase principal (FreakEShopApplication)
@@ -116,27 +116,27 @@ http://localhost:8080
 
 ## 🎯 Funcionalidades implementadas
 
-- [ ] Gestión de productos
-- [ ] Gestión de usuarios / clientes
-- [ ] Carrito de compras
-- [ ] Flujo de pedido y pago
-- [ ] Historial de pedidos
-- [ ] Web funcional
-- [ ] Persistencia de datos
-- [ ] Barra de búsqueda funcional
-- [ ] Cambio de tema oscuro/claro
+- [✅] Gestión de productos
+- [✅] Gestión de usuarios / clientes
+- [✅] Carrito de compras
+- [✅] Flujo de pedido y pago
+- [✅] Historial de pedidos
+- [✅] Web funcional
+- [✅] Persistencia de datos
+- [✅] Barra de búsqueda funcional
+- [✅] Cambio de tema oscuro/claro
 ---
 
 ## 📐 Conceptos POO aplicados
 
 | Concepto | Clase / método donde se aplica |
 |----------|-------------------------------|
-| Herencia | |
-| Encapsulación | |
-| Polimorfismo | |
-| Abstracción | |
-| Colecciones | |
-| Excepciones | |
+| Herencia | Cliente y Administrador extienden Usuario. Camisa, FiguraColeccionable, Mochila, Peluche, Comic y Accesorio extienden Producto |
+| Encapsulación |Todos los atributos de Usuario y Producto son private; acceso controlado mediante getters y setters |
+| Polimorfismo | ProductoService.obtenerTodos() retorna una List<Producto> con instancias mezcladas de sus subclases; CarritoService.obtenerTotal() opera sobre ellas uniformemente a través de la referencia Producto |
+| Abstracción | Usuario y Producto son clases abstractas que dominan las clases que las heredan en el paquete model |
+| Colecciones | CarritoService usa LinkedHashMap<String, Integer> para los ítems. PedidoService y ProductoService usan ArrayList para listas de pedidos y productos |
+| Excepciones | Algunos setters lanzan IllegalArgumentException. Los repositorios capturan IOException al leer y escribir archivos |
 
 ---
 
