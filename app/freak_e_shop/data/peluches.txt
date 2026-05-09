@@ -1,1 +1,0 @@
-P0001;Peluche Pikachu Gigante;Peluche oficial de Pikachu tamaño grande. Material hipoalergénico con relleno de fibra siliconada.;35.0;https://placehold.co/600x600/2a2a2a/f9f9f9?text=Peluche+Pikachu;Felpa hipoalergénica;Grande;true
