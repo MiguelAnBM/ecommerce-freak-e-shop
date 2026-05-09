@@ -1,0 +1,2 @@
+A0001;Gorra Monsters University;Gorra oficial de Monsters University con diseño bordado. Ajustable con diseño bordado frontal.;55000.0;https://i.pinimg.com/736x/a8/88/26/a88826a360097a66014afa7f2fe71abe.jpg;Gorra;true
+A0002;Pulsera Capitan America;Pulsera negra de cuero con símbolo del Capitán América en el centro.;35000.0;https://tse1.mm.bing.net/th/id/OIP.GtO_Wu4qF_7-7Jb7DJR2bAHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3;Pulsera;true

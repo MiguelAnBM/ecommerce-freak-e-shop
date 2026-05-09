@@ -1,0 +1,2 @@
+F0001;Figura Choso Jujutsu Kaisen;Figura coleccionable estilo anime del personaje Choso.;120000.0;https://i.pinimg.com/1200x/90/df/c0/90dfc0d76241a6d3021b693d2e7aa7ff.jpg;Jujutsu Kaisen;true;true
+F0002;Funko Pop Creeper Minecraft;Figura Funko Pop del Creeper inspirado en Minecraft.;98000.0;https://i.pinimg.com/1200x/a4/e8/25/a4e825662002d30584f34fb402836716.jpg;Minecraft;false;true

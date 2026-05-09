@@ -104,13 +104,13 @@ http://localhost:8080
 
 ## 🧩 Diagrama de clases UML
 
-![Diagrama de clases](docs/uml/diagrama-clases.png)
+![Diagrama de contexto](docs/uml/Diagrama-contexto.png)
 
 ---
 
 ## 📐 Diagrama de casos de uso
 
-![Casos de uso](docs/uml/casos-de-uso.png)
+![Casos de uso](docs/uml/diagrama_casos_de_uso.jpeg)
 
 ---
 
@@ -142,4 +142,7 @@ http://localhost:8080
 
 ## 🖼️ Capturas
 
-<!-- Agrega screenshots en la carpeta assets/ -->
+![Captura 1](assets/1.png)
+![Captura 2](assets/2.png)
+![Captura 3](assets/3.png)
+![Captura 4](assets/4.png)

@@ -1,0 +1,2 @@
+M0001;Mochila Edición Bleach;Mochila inspirada en la Sociedad de Almas, perfecta para llevar tus pertenencias con estilo shinigami.;120000.0;https://http2.mlstatic.com/D_NQ_NP_2X_823201-CBT110031241712_042026-F.webp;Mediano;Lona impermeable;true;true
+M0002;Mochila Chainsaw Man;Diseño agresivo y llamativo basado en Denji y Pochita, ideal para destacar en tus clases o eventos.;140000.0;https://http2.mlstatic.com/D_NQ_NP_2X_891357-CBT86371526455_062025-F.webp;Grande;Poliéster;false;true
